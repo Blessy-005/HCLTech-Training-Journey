@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HerbE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="./assests/leaf.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <nav class="navbar md:navbar-expand bg-1">
+        <div class="container">
+            <a class="navbar-brand" href="#">HerbE</a>
+            <button class="btn-icon navbar-toggler" type="button" data-bs-toggle="drawer" data-bs-target="#navbarDrawer"
+                aria-controls="navbarDrawer" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" aria-hidden="true"></span>
+            </button>
+            <dialog class="drawer drawer-end" tabindex="-1" id="navbarDrawer" aria-labelledby="navbarDrawerLabel">
+                <div class="drawer-header">
+                    <h5 class="drawer-title" id="navbarDrawerLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
+                </div>
+                <div class="drawer-body mb-2 md:mb-0">
+                    <ul class="nav navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#shop">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#featured">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contact</a>
+                        </li>
+
+                    </ul>
+                    <form class="hstack gap-2 " role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn-solid btn-icon theme-secondary" type="submit">
+                            <i class="bi bi-search "></i>
+                        </button>
+                    </form>
+                </div>
+            </dialog>
+        </div>
+    </nav>
+    <section class="container_box" id="home">
+        <div class="grid">
+
+            <div class="left_box">
+
+                <span class="hero_tag" style="color: rgb(134, 131, 131);">
+                    <i class="bi bi-leaf"></i> PURE • NATURAL • HERBAL
+                </span>
+
+                <h1>
+                    Nature's Goodness,<br>
+                    Just for You
+                </h1>
+
+                <p>
+                    Discover the power of nature with our carefully
+                    selected herbal products. Give your skin and body
+                    the gentle care they deserve.
+                </p>
+
+                <div class="benefits py-3" style="color: rgb(134, 131, 131);">
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Natural Ingredients
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Nature Inspired
+                    </div>
+                </div>
+                <div class="hero_note" style="color: rgb(134, 131, 131);">
+                    <i class="bi bi-flower1"></i>
+                    A little care, naturally.
+                </div>
+
+                <div class="hero_buttons mt-5">
+                    <button class="btn btn-success">
+                        Shop Now <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                    <button class="btn btn-outline-success">
+                        Explore More
+                    </button>
+                </div>
+            </div>
+
+            <div class="right_box">
+                <img src="./assests/natural-beauty-guide-zerrin-singapore.jpg" alt="Herbal products">
+            </div>
+        </div>
+<section class="features">
+    <div class="container-fluid">
+        <div class="row g-4">
+
+            <div class="col-md-4 col-lg-4">
+                <div class="feature-card">
+                    <i class="bi bi-flower1"></i>
+                    <h4>Natural Ingredients</h4>
+                    <p>Made with nature-inspired ingredients for everyday care.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-4">
+                <div class="feature-card">
+                    <i class="bi bi-heart"></i>
+                    <h4>Gentle Care</h4>
+                    <p>Give your skin the gentle attention it deserves.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-4">
+                <div class="feature-card">
+                    <i class="bi bi-leaf"></i>
+                    <h4>Eco-Friendly</h4>
+                    <p>Discover a nature-inspired daily beauty routine.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+    </section>
+    
+
+<section id="shop" class="shop-section py-5">
+
+    <div class="container">
+        <div class="shop-heading text-center mb-5">
+            <span class="section-tag">
+                DISCOVER YOUR BEAUTY
+            </span>
+
+            <h2>Shop by Category</h2>
+
+            <p>
+                Nature-inspired essentials for your daily ritual.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img class="shop-cards" src="./assests/cleanser.jpg"
+                             alt="Herbal face cleanser">
+                        <span class="shop-number">01</span>
+                    </div>
+
+                    <div class="shop-info">
+                        <h5>Face Cleansers</h5>
+                        <p>Gentle daily cleansing</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img class="shop-cards" src="./assests/serum.jpg"
+                             alt="Herbal face serum">
+                        <span class="shop-number">02</span>
+                    </div>
+
+                    <div class="shop-info">
+                        <h5>Face Serums</h5>
+                        <p>Lightweight skin care</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img class="shop-cards" src="./assests/moisturizer.jpg"
+                             alt="Herbal moisturizer">
+                        <span class="shop-number">03</span>
+                    </div>
+
+                    <div class="shop-info">
+                        <h5>Moisturizers</h5>
+                        <p>Everyday hydration</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img class="shop-cards" src="./assests/haircare.webp"
+                             alt="Herbal hair care">
+                        <span class="shop-number">04</span>
+                    </div>
+
+                    <div class="shop-info">
+                        <h5>Hair Care</h5>
+                        <p>Plant-inspired care</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        <div class="row g-4">
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img src="./assests/body-lotion.jpg" alt="Body Lotion">
+                        <span class="shop-number">05</span>
+                    </div>
+                    <div class="shop-info">
+                        <h5>Body Lotions</h5>
+                        <p>Soft and nourished skin</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img src="./assests/face-mask.jpg" alt="Face Mask">
+                        <span class="shop-number">06</span>
+                    </div>
+                    <div class="shop-info">
+                        <h5>Face Masks</h5>
+                        <p>A refreshing skincare ritual</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img src="./assests/sunscreen.webp" alt="Sunscreen">
+                        <span class="shop-number">07</span>
+                    </div>
+                    <div class="shop-info">
+                        <h5>Sunscreens</h5>
+                        <p>Everyday sun protection</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 col-md-6">
+                <div class="shop-card">
+                    <div class="shop-image">
+                        <img src="./assests/lip-care.jpg" alt="Lip Care">
+                        <span class="shop-number">08</span>
+                    </div>
+                    <div class="shop-info">
+                        <h5>Lip Care</h5>
+                        <p>Gentle care for your lips</p>
+                        <a href="#">Explore <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+<section id="featured" class="featured-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="featured-subtitle">OUR BESTSELLERS</p>
+            <h2>Nature's Favourites</h2>
+            <p class="p">Discover the essentials for your daily self-care routine.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-3 col-sm-6 col-lg-3">
+                <div class="product-card">
+                    <div class="product-image">
+                        <span class="product-badge">Bestseller</span>
+                        <img src="./assests/cleanser.jpg"
+                             alt="Herbal face cleanser">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">SKINCARE</p>
+                        <h5>Herbal Face Cleanser</h5>
+                        <p class="product-price">₹299</p>
+                        <a href="#" class="product-btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-sm-6 col-lg-3">
+                <div class="product-card">
+                    <div class="product-image">
+                        <span class="product-badge">Popular</span>
+                        <img src="./assests/serum.jpg"
+                             alt="Herbal face serum">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">SKINCARE</p>
+                        <h5>Herbal Face Serum</h5>
+                        <p class="product-price">₹399</p>
+                        <a href="#" class="product-btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-sm-6 col-lg-3">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="./assests/moisturizer.jpg"
+                             alt="Herbal moisturizer">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">SKINCARE</p>
+                        <h5>Herbal Moisturizer</h5>
+                        <p class="product-price">₹349</p>
+                        <a href="#" class="product-btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 col-sm-6 col-lg-3">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="./assests/haircare.webp"
+                             alt="Herbal haircare product">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">HAIRCARE</p>
+                        <h5>Herbal Haircare</h5>
+                        <p class="product-price">₹449</p>
+                        <a href="#" class="product-btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="#shop" class="view-all-btn">Explore All Products
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+</section>
+<section id="about" class="about-section">
+    <div class="about-content">
+        <span class="section-tag">OUR STORY</span>
+        <h2>Beauty Inspired by Nature</h2>
+
+        <p>
+            At HerbE, we believe in the goodness of nature.
+            Our goal is to make everyday skincare simple,
+            gentle, and inspired by natural ingredients.
+        </p>
+
+        <a href="#shop" class="btn btn-success">
+            Explore Our Products
+        </a>
+    </div>
+</section>
+<section id="contact" class="contact-section">
+    <div class="contact-content">
+        <span class="section-tag">GET IN TOUCH</span>
+        <h2>We'd Love to Hear From You</h2>
+
+        <p>Have questions about our herbal products? Contact us!</p>
+
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" rows="5" required></textarea>
+
+            <button type="submit" class="btn btn-success">
+                Send Message
+            </button>
+        </form>
+    </div>
+</section>
+<footer class="herbe-footer">
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <h2>HerbE<span>.</span></h2>
+            <p>A little care, naturally.</p>
+            <p>
+                Discover nature-inspired skincare
+                for your everyday self-care routine.
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <a href="#home">Home</a>
+            <a href="#shop">Shop</a>
+            <a href="#featured">Features</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-contact">
+            <h4>Get in Touch</h4>
+            <p><i class="bi bi-envelope"></i> hello@herbe.example</p>
+            <p><i class="bi bi-clock"></i> Mon – Sat, 9 AM – 6 PM</p>
+
+            <div class="footer-socials">
+                <a href="#" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+                <a href="#" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" aria-label="Pinterest">
+                    <i class="bi bi-pinterest"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 HerbE. All rights reserved.</p>
+        <p>Made with <i class="bi bi-heart-fill"></i> and nature.</p>
+    </div>
+</footer>
+
+
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

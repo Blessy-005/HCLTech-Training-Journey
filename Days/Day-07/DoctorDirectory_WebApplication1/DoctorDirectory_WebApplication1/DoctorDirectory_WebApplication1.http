@@ -1,0 +1,6 @@
+@DoctorDirectory_WebApplication1_HostAddress = http://localhost:5146
+
+GET {{DoctorDirectory_WebApplication1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

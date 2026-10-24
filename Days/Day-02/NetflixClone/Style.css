@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} 
+/*
+.bg {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px;
+    position: relative;
+    width: 100%;
+    /* height: 100vh; */
+
+    /* background-image: url(https://assets.nflxext.com/ffe/siteui/vlv3/ab1fe332-993a-44d1-b60b-cd4f8d11b96e/web/IN-en-20260928-TRIFECTA-perspective_85aef51c-94d6-41ea-a1ea-1e77199158f1_large.jpg); */
+    /* background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+header{
+    height: 40px;
+}
+.bg > * {
+    position: relative;
+    z-index: 1;
+}
+.signin{
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 7px;
+    background: tomato;
+    color: white;
+}
+.logo {
+    height: 50px;
+    width: auto;
+}
+.content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */ 
+.header{
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.logo{
+    height: 40px;
+}
+.signin{
+    text-decoration: none;
+    color: white;
+    background: red;
+    padding: 8px 25px;
+    font-size: 18px;
+    border-radius: 7px;
+}
+.select{
+    background-color:transparent ;
+    padding: 8px 19px;
+    color: white;
+    font-size: 15px;
+    border: 1.5px solid rgb(220, 215, 215);
+}
+.select option{
+    background-color: black;
+    color: white;
+}
+
+.buttons{
+    display: flex;
+    gap: 35px;
+}
+.bg{
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("https://assets.nflxext.com/ffe/siteui/vlv3/ab1fe332-993a-44d1-b60b-cd4f8d11b96e/web/IN-en-20260928-TRIFECTA-perspective_85aef51c-94d6-41ea-a1ea-1e77199158f1_large.jpg");
+    /* background-image: url(https://assets.nflxext.com/ffe/siteui/vlv3/ab1fe332-993a-44d1-b60b-cd4f8d11b96e/web/IN-en-20260928-TRIFECTA-perspective_85aef51c-94d6-41ea-a1ea-1e77199158f1_large.jpg); */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; 
+    height: 100vh;
+    z-index: -1;
+}
+.contents{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+    gap: 30px;
+
+}
+.contents h1{
+    font-size: 55px;
+    width: 630px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.contents p{
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.contents p p{
+    margin-top: 20px;
+}
+.but{
+    display: flex;
+    gap: 15px;
+}
+.but input{
+    padding: 15px 15px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 8px;
+}
+.but button{
+    padding: 15px 65px;
+    font-size: 16px;
+    font-weight: 600;
+    background: red;
+    border: none;
+    color: white;
+    border-radius: 8px;
+
+}
+.top{
+    background: linear-gradient(#3d1214,black);
+    width: 100%;
+    height: 100vh;
+}
+.head{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 10%;
+border-bottom: 0.3px solid rgba(255, 255, 255, 0.3);}
+.box {
+    width: 400px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    color: white;
+}
+
+.box h1 {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    margin: 0;
+}
+
+.box p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    text-align: left;
+}
+
+.box input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.box button {
+    width: 100%;
+    padding: 15px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+.help p{
+    margin: 18px 0px;
+}

@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="nav">
+        <h2 class="logo">Student Portal</h2>
+
+        <ul class="nav-bar">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <main class="page">
+
+        <!-- Student Form -->
+        <section class="form-card">
+            <form id="studentForm">
+
+                <h2>Add Student</h2>
+
+                <div class="input">
+                    <label for="name">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter student name"
+                        required
+                    >
+                </div>
+
+                <div class="input">
+                    <label for="dept">Department</label>
+                    <input
+                        type="text"
+                        id="dept"
+                        placeholder="Enter department"
+                        required
+                    >
+                </div>
+
+                <div class="input">
+                    <label for="reg">Register Number</label>
+                    <input
+                        type="number"
+                        id="reg"
+                        placeholder="Enter register number"
+                        required
+                    >
+                </div>
+
+                <button type="submit">Add Student</button>
+
+            </form>
+        </section>
+
+        <!-- Student Table -->
+        <section class="table-card">
+
+            <h2>Student List</h2>
+            <p>View and manage student records</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Register No.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="studentTable">
+                        <tr>
+                            <td colspan="4">
+                                No students added yet
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="index.js"></script>
+
+</body>
+</html>

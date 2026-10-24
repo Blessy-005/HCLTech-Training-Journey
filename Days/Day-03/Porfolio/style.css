@@ -1,0 +1,298 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.logo{
+    color: white;
+    margin-right: 30%;
+}
+.header {
+    height: 80px;   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        90deg,
+        #1f1640,
+        #07111f,
+        #5e5e6d,
+        #0b1d33,
+        #000000
+    );
+
+position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-size: 300% 100%;
+    animation: gradientMove 6s linear infinite;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+
+}
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+    /* background: black; */
+/* border-bottom: 1px solid rgb(156, 151, 151);} */
+
+.header ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.header a {
+    text-decoration: none;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-weight: 500;
+
+}
+
+.banner {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white; 
+    gap: 10px; 
+    background-image: url(./assessts/banner.jpg);
+    background-repeat: no-repeat;
+    background-position: center 30%;
+    background-size: cover;
+    padding-top: 80px;
+    /* background-color: rgb(0, 0, 0,0.8); */
+}
+.intro{
+    font-size: 35px;
+}
+.fira-mono-medium {
+  font-family: "Fira Mono", monospace;
+  font-weight: 500;
+  font-style: normal;
+}
+.cap{
+    font-size: 20px;
+    margin-top: 12px
+}
+#about{
+    background: #f8f9fa;
+    height: 80vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.box{
+    height: 60vh;
+    display: flex;
+    padding: 30px 60px;
+    gap: 35px;
+}
+.left{
+    flex: 1;
+}
+.right-btn{
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+.right-btn button{
+        padding: 10px 15px;
+        border-radius: 25px;
+        border: none;
+        color: #000000;
+        background: white;
+        font-size: 15px;
+        font-weight: 600;
+
+}
+.right-btn button:hover{
+    border:1px solid #f8f9fa;
+    color: white;
+    background: #424f61;
+}
+.right{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 5px 40px;
+    background: transparent;
+}
+.right .abt{
+    font-size: 33px;
+    margin-bottom: 15px;
+}
+.subbox{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    background:#424f61;
+    border-radius: 8px;
+    color: rgb(235, 232, 232);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+    transition: 0.3s ease-out;
+}
+    .subbox:hover{
+        transform: translateY(-9px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    }
+.title{
+    text-align: center;
+    padding: 10pt;
+}
+.subbox p{
+    font-size: 19px;
+}
+.title::after{
+    content: "";
+    display: block;
+    height: 2px;
+    width: 100px;
+    background: black;
+    margin: 5px auto 0;
+}
+.name{
+    background: linear-gradient(
+        90deg,
+        #8ecae6,
+        #c77dff,
+        #ff7eb3
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.me{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    border-radius: 8px;
+}
+#projects{
+    background: #AEC4D4;
+    height: 100vh;
+    z-index: -1;
+    padding: 20px;
+
+}
+.grid1{
+    margin: 20px 125px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+.grid1 .grid{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    background: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px 35px;
+    transition: 0.3s ease;
+
+}
+.grid1 .grid:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+.grid-title{
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.grid-exp{
+    font-size: 18px;
+    line-height: 23px;
+    font-family: sans-serif;
+}
+.grid-det{
+color: rgba(0, 0, 0, 0.5);
+font-size: 19x;
+}
+#contact{
+    height: 90vh;
+    background:whitesmoke;
+}
+.grid2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 45px;
+    padding: 20px 140px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.grid2 > div {
+    flex: 1;
+    height: 400px;
+    background: white;
+    box-sizing: border-box;
+    padding: 30px 40px;
+}
+.grid2 .getin,
+.grid2 .contact-det {
+    flex: 1;
+    min-height: 400px;
+    background: white;
+    padding: 25px 40px;
+    box-sizing: border-box;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    
+}
+.grid2 .getin:hover,
+.grid2 .contact-det:hover {
+   transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    
+}
+.titleg{
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.grid2 .getin input{
+    padding: 8px 200px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.grid2 .getin textarea{
+    padding: 18px 200px;
+    margin-bottom: 20px;
+    border-radius: 10px
+}
+.getin-btn button{
+    padding: 10px 15px;
+    border: none;
+    background: blue;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 25px;
+}
+.getin-btn button:hover{
+    padding: 10px 15px;
+    border:1px solid blue;
+    background: white;
+    color: blue;
+    text-transform: uppercase;
+    border-radius: 25px;
+    transform: translateX(-7px);
+}
+
+
