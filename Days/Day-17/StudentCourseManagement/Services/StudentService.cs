@@ -90,4 +90,17 @@ public class StudentService
 
         return _repository.UpdateAsync(student);
     }
+
+    public Task<bool> DeactivateAsync(int studentId)
+    {
+        if (studentId <= 0)
+        {
+            throw new ArgumentException(
+                "Student ID must be greater than zero.",
+                nameof(studentId));
+        }
+
+        return _repository.DeactivateAsync(studentId);
+    }
+
 }

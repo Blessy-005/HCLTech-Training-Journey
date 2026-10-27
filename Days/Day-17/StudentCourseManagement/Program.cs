@@ -19,6 +19,7 @@ while (running)
     Console.WriteLine("3. Search Student by ID");
     Console.WriteLine("4. Search Student by Name");
     Console.WriteLine("5. Update Student");
+    Console.WriteLine("6. Deactivate Student");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -259,6 +260,57 @@ while (running)
             }
 
             break;
+
+        case "6":
+            try
+            {
+                Console.Write("Enter Student ID to deactivate: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int studentId) ||
+                    studentId <= 0)
+                {
+                    Console.WriteLine("Invalid student ID.");
+                    break;
+                }
+
+                Student? student = await service.GetByIdAsync(studentId);
+
+                if (student == null)
+                {
+                    Console.WriteLine("Active student not found.");
+                    break;
+                }
+
+                Console.Write(
+                    $"Are you sure you want to deactivate {student.Name}? (y/n): ");
+
+                string confirmation = Console.ReadLine() ?? "";
+
+                if (!confirmation.Equals(
+                        "y",
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Deactivation cancelled.");
+                    break;
+                }
+
+                bool deactivated = await service.DeactivateAsync(studentId);
+
+                Console.WriteLine(deactivated
+                    ? "Student deactivated successfully!"
+                    : "Student could not be deactivated.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+
+            break;
+
 
 
         case "0":

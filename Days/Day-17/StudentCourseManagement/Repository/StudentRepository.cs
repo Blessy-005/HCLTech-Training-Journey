@@ -211,4 +211,28 @@ public async Task<List<Student>> SearchByNameAsync(string name)
     return students;
 }
 
+    public async Task<bool> DeactivateAsync(int studentId)
+    {
+        const string sql = """
+        UPDATE Students
+        SET IsActive = 0
+        WHERE StudentId = @StudentId
+          AND IsActive = 1;
+        """;
+
+        await using SqlConnection connection =
+            DatabaseHelper.CreateConnection();
+
+        await using SqlCommand command = new(sql, connection);
+
+        command.Parameters.Add("@StudentId", SqlDbType.Int)
+            .Value = studentId;
+
+        await connection.OpenAsync();
+
+        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+        return rowsAffected > 0;
+    }
+
 }
