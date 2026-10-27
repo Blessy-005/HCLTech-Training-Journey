@@ -262,8 +262,8 @@ namespace AsyncLearningPractice
 
             //await TaskTrackingAsync();
             //await SequentialAsync();
-            await ConcurrentAsync();
-            // await WhenAllAsync();
+            //await ConcurrentAsync();
+            await WhenAllAsync();
             // await WhenAnyAsync();
             // await ExceptionHandlingAsync();
             // await CancellationAsync();
