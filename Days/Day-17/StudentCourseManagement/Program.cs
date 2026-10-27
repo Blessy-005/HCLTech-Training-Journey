@@ -15,6 +15,7 @@ while (running)
     Console.WriteLine(" STUDENT MANAGEMENT");
     Console.WriteLine("================================");
     Console.WriteLine("1. Register Student");
+    Console.WriteLine("2. List All Active Students");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -72,6 +73,37 @@ while (running)
             }
 
             break;
+
+        case "2":
+            try
+            {
+                List<Student> students = await service.GetAllAsync();
+
+                if (students.Count == 0)
+                {
+                    Console.WriteLine("No active students found.");
+                    break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("===== ACTIVE STUDENTS =====");
+
+                foreach (Student student in students)
+                {
+                    Console.WriteLine(
+                        $"ID: {student.StudentId} | " +
+                        $"Name: {student.Name} | " +
+                        $"Email: {student.Email} | " +
+                        $"Age: {student.Age} | " +
+                        $"Department ID: {student.DepartmentId}");
+                }
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+            break;
+
 
         case "0":
             running = false;

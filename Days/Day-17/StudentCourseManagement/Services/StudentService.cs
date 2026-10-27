@@ -36,4 +36,10 @@ public class StudentService
 
         return _repository.AddAsync(student);
     }
+
+    public Task<List<Student>> GetAllAsync()
+    {
+        return _repository.GetAllAsync();
+    }
+
 }
