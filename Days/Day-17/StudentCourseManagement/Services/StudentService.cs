@@ -103,4 +103,16 @@ public class StudentService
         return _repository.DeactivateAsync(studentId);
     }
 
+    public Task<List<Student>> GetByDepartmentAsync(int departmentId)
+    {
+        if (departmentId <= 0)
+        {
+            throw new ArgumentException(
+                "Department ID must be greater than zero.",
+                nameof(departmentId));
+        }
+
+        return _repository.GetByDepartmentAsync(departmentId);
+    }
+
 }

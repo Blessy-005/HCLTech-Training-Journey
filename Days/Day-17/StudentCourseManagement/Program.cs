@@ -20,6 +20,7 @@ while (running)
     Console.WriteLine("4. Search Student by Name");
     Console.WriteLine("5. Update Student");
     Console.WriteLine("6. Deactivate Student");
+    Console.WriteLine("7. Filter Students by Department");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -310,6 +311,51 @@ while (running)
             }
 
             break;
+
+        case "7":
+            try
+            {
+                Console.Write("Enter Department ID: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int departmentId) ||
+                    departmentId <= 0)
+                {
+                    Console.WriteLine("Invalid department ID.");
+                    break;
+                }
+
+                List<Student> students =
+                    await service.GetByDepartmentAsync(departmentId);
+
+                if (students.Count == 0)
+                {
+                    Console.WriteLine(
+                        "No active students found in this department.");
+                    break;
+                }
+
+                Console.WriteLine("\nActive Students in Department:");
+
+                foreach (Student student in students)
+                {
+                    Console.WriteLine(
+                        $"ID: {student.StudentId} | " +
+                        $"Name: {student.Name} | " +
+                        $"Email: {student.Email} | " +
+                        $"Age: {student.Age}");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+
+            break;
+
 
 
 
