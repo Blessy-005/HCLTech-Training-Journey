@@ -42,4 +42,17 @@ public class StudentService
         return _repository.GetAllAsync();
     }
 
+    public Task<Student?> GetByIdAsync(int studentId)
+    {
+        if (studentId <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(studentId),
+                "Student ID must be a positive number.");
+        }
+
+        return _repository.GetByIdAsync(studentId);
+    }
+
+
 }

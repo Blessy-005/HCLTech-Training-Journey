@@ -16,6 +16,7 @@ while (running)
     Console.WriteLine("================================");
     Console.WriteLine("1. Register Student");
     Console.WriteLine("2. List All Active Students");
+    Console.WriteLine("3. Search Student by ID");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -103,6 +104,45 @@ while (running)
                 Console.WriteLine($"Database error: {ex.Message}");
             }
             break;
+
+        case "3":
+            try
+            {
+                Console.Write("Enter student ID: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int studentId))
+                {
+                    Console.WriteLine("Student ID must be a number.");
+                    break;
+                }
+
+                Student? student = await service.GetByIdAsync(studentId);
+
+                if (student is null)
+                {
+                    Console.WriteLine("No active student found with that ID.");
+                    break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("===== STUDENT DETAILS =====");
+                Console.WriteLine($"ID: {student.StudentId}");
+                Console.WriteLine($"Name: {student.Name}");
+                Console.WriteLine($"Email: {student.Email}");
+                Console.WriteLine($"Age: {student.Age}");
+                Console.WriteLine($"Department ID: {student.DepartmentId}");
+                Console.WriteLine($"Admission Date: {student.AdmissionDate}");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+            break;
+
 
 
         case "0":
