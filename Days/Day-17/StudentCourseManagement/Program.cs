@@ -15,6 +15,8 @@ string connectionString =
 
 CourseRepository courseRepository = new(connectionString);
 CourseService courseService = new(courseRepository);
+EnrollmentRepository enrollmentRepository = new();
+EnrollmentService enrollmentService = new(enrollmentRepository);
 
 bool running = true;
 
@@ -27,6 +29,7 @@ while (running)
     Console.WriteLine("1. Student Management");
     Console.WriteLine("2. Department Management");
     Console.WriteLine("3. Course Management");
+    Console.WriteLine("4. Enrollment Management");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -44,6 +47,9 @@ while (running)
 
         case "3":
             await CourseMenu(courseService);
+            break;
+        case "4":
+            await EnrollmentMenu(enrollmentService);
             break;
 
         case "0":
@@ -799,6 +805,180 @@ static async Task CourseMenu(CourseService service)
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+}
+
+static async Task EnrollmentMenu(EnrollmentService service)
+{
+    bool running = true;
+
+    while (running)
+    {
+        Console.WriteLine();
+        Console.WriteLine("================================");
+        Console.WriteLine(" ENROLLMENT MANAGEMENT");
+        Console.WriteLine("================================");
+        Console.WriteLine("1. Enroll Student in Course");
+        Console.WriteLine("2. List All Enrollments");
+        Console.WriteLine("3. Search Enrollment by ID");
+        Console.WriteLine("4. Update Enrollment Status");
+        Console.WriteLine("0. Back to Main Menu");
+        Console.Write("Enter your choice: ");
+
+        string? choice = Console.ReadLine();
+
+        try
+        {
+            switch (choice)
+            {
+                case "1":
+                    {
+                        Console.Write("Enter Student ID: ");
+
+                        if (!int.TryParse(Console.ReadLine(), out int studentId)
+                            || studentId <= 0)
+                        {
+                            Console.WriteLine("Invalid Student ID.");
+                            break;
+                        }
+
+                        Console.Write("Enter Course ID: ");
+
+                        if (!int.TryParse(Console.ReadLine(), out int courseId)
+                            || courseId <= 0)
+                        {
+                            Console.WriteLine("Invalid Course ID.");
+                            break;
+                        }
+
+                        Enrollment enrollment = new()
+                        {
+                            StudentId = studentId,
+                            CourseId = courseId,
+                            Status = "Enrolled"
+                        };
+
+                        int id = await service.EnrollAsync(enrollment);
+
+                        Console.WriteLine(
+                            $"Enrollment successful! Enrollment ID: {id}");
+                        break;
+                    }
+
+                case "2":
+                    {
+                        List<Enrollment> enrollments =
+                            await service.GetAllAsync();
+
+                        if (enrollments.Count == 0)
+                        {
+                            Console.WriteLine("No enrollments found.");
+                            break;
+                        }
+
+                        foreach (Enrollment e in enrollments)
+                        {
+                            PrintEnrollment(e);
+                        }
+
+                        break;
+                    }
+
+                case "3":
+                    {
+                        Console.Write("Enter Enrollment ID: ");
+
+                        if (!int.TryParse(Console.ReadLine(), out int id)
+                            || id <= 0)
+                        {
+                            Console.WriteLine("Invalid Enrollment ID.");
+                            break;
+                        }
+
+                        Enrollment? enrollment =
+                            await service.GetByIdAsync(id);
+
+                        if (enrollment == null)
+                        {
+                            Console.WriteLine("Enrollment not found.");
+                        }
+                        else
+                        {
+                            PrintEnrollment(enrollment);
+                        }
+
+                        break;
+                    }
+
+                case "4":
+                    {
+                        Console.Write("Enter Enrollment ID: ");
+
+                        if (!int.TryParse(Console.ReadLine(), out int id)
+                            || id <= 0)
+                        {
+                            Console.WriteLine("Invalid Enrollment ID.");
+                            break;
+                        }
+
+                        Console.WriteLine("Valid statuses: Enrolled, Completed, Cancelled");
+                        Console.Write("Enter new status: ");
+                        string status = Console.ReadLine() ?? "";
+
+                        bool updated =
+                            await service.UpdateStatusAsync(id, status);
+
+                        Console.WriteLine(updated
+                            ? "Enrollment status updated successfully!"
+                            : "Enrollment not found.");
+
+                        break;
+                    }
+
+                case "0":
+                    running = false;
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Try again.");
+                    break;
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Validation error: {ex.Message}");
+        }
+        catch (SqlException ex)
+        {
+            if (ex.Number == 2601 || ex.Number == 2627)
+            {
+                Console.WriteLine(
+                    "This student is already enrolled in that course.");
+            }
+            else if (ex.Number == 547)
+            {
+                Console.WriteLine(
+                    "Student ID or Course ID does not exist.");
+            }
+            else
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+
+static void PrintEnrollment(Enrollment enrollment)
+{
+    Console.WriteLine(
+        $"Enrollment ID: {enrollment.EnrollmentId} | " +
+        $"Student ID: {enrollment.StudentId} | " +
+        $"Course ID: {enrollment.CourseId} | " +
+        $"Date: {enrollment.EnrolledAt} | " +
+        $"Status: {enrollment.Status}");
 }
 
 static void PrintCourse(Course course)
