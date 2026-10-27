@@ -120,5 +120,50 @@ public class StudentRepository
         return null;
     }
 
+    public async Task<List<Student>> SearchByNameAsync(string name)
+    {
+        const string sql = """
+        SELECT StudentId, Name, Email, Age, DepartmentId,
+               AdmissionDate, IsActive
+        FROM Students
+        WHERE Name LIKE @Name
+          AND IsActive = 1
+        ORDER BY Name;
+        """;
+
+        List<Student> students = new();
+
+        await using SqlConnection connection =
+            DatabaseHelper.CreateConnection();
+
+        await using SqlCommand command = new(sql, connection);
+
+        command.Parameters.Add("@Name", SqlDbType.NVarChar, 100)
+            .Value = $"%{name}%";
+
+        await connection.OpenAsync();
+
+        await using SqlDataReader reader =
+            await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            Student student = new()
+            {
+                StudentId = reader.GetInt32(reader.GetOrdinal("StudentId")),
+                Name = reader.GetString(reader.GetOrdinal("Name")),
+                Email = reader.GetString(reader.GetOrdinal("Email")),
+                Age = reader.GetInt32(reader.GetOrdinal("Age")),
+                DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
+                AdmissionDate = reader.GetDateTime(reader.GetOrdinal("AdmissionDate")),
+                IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+            };
+
+            students.Add(student);
+        }
+
+        return students;
+    }
+
 
 }

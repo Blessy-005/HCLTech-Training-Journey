@@ -17,6 +17,7 @@ while (running)
     Console.WriteLine("1. Register Student");
     Console.WriteLine("2. List All Active Students");
     Console.WriteLine("3. Search Student by ID");
+    Console.WriteLine("4. Search Student by Name");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -144,6 +145,44 @@ while (running)
             break;
 
 
+
+        case "4":
+            try
+            {
+                Console.Write("Enter student name to search: ");
+                string name = Console.ReadLine() ?? "";
+
+                List<Student> students =
+                    await service.SearchByNameAsync(name);
+
+                if (students.Count == 0)
+                {
+                    Console.WriteLine("No active students found matching that name.");
+                    break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("===== SEARCH RESULTS =====");
+
+                foreach (Student student in students)
+                {
+                    Console.WriteLine(
+                        $"ID: {student.StudentId} | " +
+                        $"Name: {student.Name} | " +
+                        $"Email: {student.Email} | " +
+                        $"Age: {student.Age} | " +
+                        $"Department ID: {student.DepartmentId}");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+            break;
 
         case "0":
             running = false;

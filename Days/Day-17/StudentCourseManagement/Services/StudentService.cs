@@ -55,4 +55,16 @@ public class StudentService
     }
 
 
+    public Task<List<Student>> SearchByNameAsync(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException(
+                "Search name cannot be empty.",
+                nameof(name));
+        }
+
+        return _repository.SearchByNameAsync(name.Trim());
+    }
+
 }
