@@ -18,6 +18,7 @@ while (running)
     Console.WriteLine("2. List All Active Students");
     Console.WriteLine("3. Search Student by ID");
     Console.WriteLine("4. Search Student by Name");
+    Console.WriteLine("5. Update Student");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -183,6 +184,82 @@ while (running)
                 Console.WriteLine($"Database error: {ex.Message}");
             }
             break;
+
+        case "5":
+            try
+            {
+                Console.Write("Enter Student ID to update: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int studentId) ||
+                    studentId <= 0)
+                {
+                    Console.WriteLine("Invalid student ID.");
+                    break;
+                }
+
+                Student? student = await service.GetByIdAsync(studentId);
+
+                if (student == null)
+                {
+                    Console.WriteLine("Active student not found.");
+                    break;
+                }
+
+                Console.Write("Enter new name: ");
+                student.Name = Console.ReadLine() ?? "";
+
+                Console.Write("Enter new email: ");
+                student.Email = Console.ReadLine() ?? "";
+
+                Console.Write("Enter new age: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int age))
+                {
+                    Console.WriteLine("Invalid age.");
+                    break;
+                }
+
+                student.Age = age;
+
+                Console.Write("Enter new department ID: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int departmentId))
+                {
+                    Console.WriteLine("Invalid department ID.");
+                    break;
+                }
+
+                student.DepartmentId = departmentId;
+
+                Console.Write("Enter new admission date (yyyy-MM-dd): ");
+
+                if (!DateTime.TryParse(
+                        Console.ReadLine(),
+                        out DateTime admissionDate))
+                {
+                    Console.WriteLine("Invalid admission date.");
+                    break;
+                }
+
+                student.AdmissionDate = admissionDate;
+
+                bool updated = await service.UpdateAsync(student);
+
+                Console.WriteLine(updated
+                    ? "Student updated successfully!"
+                    : "Student could not be updated.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Validation error: {ex.Message}");
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+            }
+
+            break;
+
 
         case "0":
             running = false;

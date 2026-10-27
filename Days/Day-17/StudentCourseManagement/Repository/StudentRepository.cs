@@ -120,9 +120,55 @@ public class StudentRepository
         return null;
     }
 
-    public async Task<List<Student>> SearchByNameAsync(string name)
+    
+
+    public async Task<bool> UpdateAsync(Student student)
     {
         const string sql = """
+        UPDATE Students
+        SET Name = @Name,
+            Email = @Email,
+            Age = @Age,
+            DepartmentId = @DepartmentId,
+            AdmissionDate = @AdmissionDate
+        WHERE StudentId = @StudentId
+          AND IsActive = 1;
+        """;
+
+        await using SqlConnection connection =
+            DatabaseHelper.CreateConnection();
+
+        await using SqlCommand command = new(sql, connection);
+
+        command.Parameters.Add("@StudentId", SqlDbType.Int)
+            .Value = student.StudentId;
+
+        command.Parameters.Add("@Name", SqlDbType.NVarChar, 100)
+            .Value = student.Name;
+
+        command.Parameters.Add("@Email", SqlDbType.NVarChar, 100)
+            .Value = student.Email;
+
+        command.Parameters.Add("@Age", SqlDbType.Int)
+            .Value = student.Age;
+
+        command.Parameters.Add("@DepartmentId", SqlDbType.Int)
+            .Value = student.DepartmentId;
+
+        command.Parameters.Add("@AdmissionDate", SqlDbType.Date)
+            .Value = student.AdmissionDate;
+
+        await connection.OpenAsync();
+
+        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+        return rowsAffected > 0;
+    }
+
+    
+public async Task<List<Student>> SearchByNameAsync(string name)
+{
+    const string sql = """
         SELECT StudentId, Name, Email, Age, DepartmentId,
                AdmissionDate, IsActive
         FROM Students
@@ -131,39 +177,38 @@ public class StudentRepository
         ORDER BY Name;
         """;
 
-        List<Student> students = new();
+    List<Student> students = new();
 
-        await using SqlConnection connection =
-            DatabaseHelper.CreateConnection();
+    await using SqlConnection connection =
+        DatabaseHelper.CreateConnection();
 
-        await using SqlCommand command = new(sql, connection);
+    await using SqlCommand command = new(sql, connection);
 
-        command.Parameters.Add("@Name", SqlDbType.NVarChar, 100)
-            .Value = $"%{name}%";
+    command.Parameters.Add("@Name", SqlDbType.NVarChar, 100)
+        .Value = $"%{name}%";
 
-        await connection.OpenAsync();
+    await connection.OpenAsync();
 
-        await using SqlDataReader reader =
-            await command.ExecuteReaderAsync();
+    await using SqlDataReader reader =
+        await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync())
+    while (await reader.ReadAsync())
+    {
+        Student student = new()
         {
-            Student student = new()
-            {
-                StudentId = reader.GetInt32(reader.GetOrdinal("StudentId")),
-                Name = reader.GetString(reader.GetOrdinal("Name")),
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                Age = reader.GetInt32(reader.GetOrdinal("Age")),
-                DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
-                AdmissionDate = reader.GetDateTime(reader.GetOrdinal("AdmissionDate")),
-                IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
-            };
+            StudentId = reader.GetInt32(reader.GetOrdinal("StudentId")),
+            Name = reader.GetString(reader.GetOrdinal("Name")),
+            Email = reader.GetString(reader.GetOrdinal("Email")),
+            Age = reader.GetInt32(reader.GetOrdinal("Age")),
+            DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
+            AdmissionDate = reader.GetDateTime(reader.GetOrdinal("AdmissionDate")),
+            IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+        };
 
-            students.Add(student);
-        }
-
-        return students;
+        students.Add(student);
     }
 
+    return students;
+}
 
 }

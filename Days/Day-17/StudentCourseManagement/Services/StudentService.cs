@@ -42,19 +42,6 @@ public class StudentService
         return _repository.GetAllAsync();
     }
 
-    public Task<Student?> GetByIdAsync(int studentId)
-    {
-        if (studentId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(studentId),
-                "Student ID must be a positive number.");
-        }
-
-        return _repository.GetByIdAsync(studentId);
-    }
-
-
     public Task<List<Student>> SearchByNameAsync(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -67,4 +54,40 @@ public class StudentService
         return _repository.SearchByNameAsync(name.Trim());
     }
 
+    public Task<Student?> GetByIdAsync(int studentId)
+    {
+        if (studentId <= 0)
+        {
+            throw new ArgumentException(
+                "Student ID must be greater than zero.",
+                nameof(studentId));
+        }
+
+        return _repository.GetByIdAsync(studentId);
+    }
+    public Task<bool> UpdateAsync(Student student)
+    {
+        if (student.StudentId <= 0)
+            throw new ArgumentException("Student ID must be greater than zero.");
+
+        if (string.IsNullOrWhiteSpace(student.Name))
+            throw new ArgumentException("Student name cannot be empty.");
+
+        if (string.IsNullOrWhiteSpace(student.Email))
+            throw new ArgumentException("Student email cannot be empty.");
+
+        if (student.Age <= 0)
+            throw new ArgumentException("Student age must be greater than zero.");
+
+        if (student.DepartmentId <= 0)
+            throw new ArgumentException("Department ID must be greater than zero.");
+
+        if (student.AdmissionDate == default)
+            throw new ArgumentException("Admission date is required.");
+
+        student.Name = student.Name.Trim();
+        student.Email = student.Email.Trim();
+
+        return _repository.UpdateAsync(student);
+    }
 }
