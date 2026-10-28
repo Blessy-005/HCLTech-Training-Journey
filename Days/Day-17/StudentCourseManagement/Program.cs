@@ -3,7 +3,8 @@ using StudentCourseManagement.Models;
 using StudentCourseManagement.Repositories;
 using StudentCourseManagement.Repository;
 using StudentCourseManagement.Services;
-
+using StudentCourseManagement.Repository;
+using StudentCourseManagement.Services;
 StudentRepository studentRepository = new();
 StudentService studentService = new(studentRepository);
 
@@ -17,7 +18,10 @@ CourseRepository courseRepository = new(connectionString);
 CourseService courseService = new(courseRepository);
 EnrollmentRepository enrollmentRepository = new();
 EnrollmentService enrollmentService = new(enrollmentRepository);
-
+var reportRepository = new ReportRepository();
+var reportService = new ReportService(reportRepository);
+var auditLogRepository = new AuditLogRepository();
+var auditLogService = new AuditLogService(auditLogRepository);
 bool running = true;
 
 while (running)
@@ -30,6 +34,8 @@ while (running)
     Console.WriteLine("2. Department Management");
     Console.WriteLine("3. Course Management");
     Console.WriteLine("4. Enrollment Management");
+    Console.WriteLine("5. Reports");
+    Console.WriteLine("6. View Audit Logs");
     Console.WriteLine("0. Exit");
     Console.Write("Enter your choice: ");
 
@@ -51,7 +57,12 @@ while (running)
         case "4":
             await EnrollmentMenu(enrollmentService);
             break;
-
+        case "5":
+            await ReportMenu(reportService);
+            break;
+        case "6":
+            await ViewAuditLogs(auditLogService);
+            break;
         case "0":
             running = false;
             Console.WriteLine("Application closed.");
@@ -980,7 +991,119 @@ static void PrintEnrollment(Enrollment enrollment)
         $"Date: {enrollment.EnrolledAt} | " +
         $"Status: {enrollment.Status}");
 }
+static async Task ReportMenu(ReportService service)
+{
+    while (true)
+    {
+        Console.WriteLine("\n===== REPORTS =====");
+        Console.WriteLine("1. Student Count by Department");
+        Console.WriteLine("2. Enrollment Count by Course");
+        Console.WriteLine("3. Students Without Enrollments");
+        Console.WriteLine("4. Courses Without Enrollments");
+        Console.WriteLine("0. Back to Main Menu");
+        Console.Write("Choose an option: ");
 
+        string? choice = Console.ReadLine();
+
+        switch (choice)
+        {
+            case "1":
+                {
+                    var reports =
+                        await service.GetStudentCountByDepartmentAsync();
+
+                    Console.WriteLine("\n--- Student Count by Department ---");
+
+                    if (reports.Count == 0)
+                    {
+                        Console.WriteLine("No departments found.");
+                        break;
+                    }
+
+                    foreach (var report in reports)
+                    {
+                        Console.WriteLine(
+                            $"{report.DepartmentName}: {report.StudentCount} students");
+                    }
+
+                    break;
+                }
+
+            case "2":
+                {
+                    var reports =
+                        await service.GetEnrollmentCountByCourseAsync();
+
+                    Console.WriteLine("\n--- Enrollment Count by Course ---");
+
+                    if (reports.Count == 0)
+                    {
+                        Console.WriteLine("No courses found.");
+                        break;
+                    }
+
+                    foreach (var report in reports)
+                    {
+                        Console.WriteLine(
+                            $"{report.CourseName}: {report.EnrollmentCount} enrollments");
+                    }
+
+                    break;
+                }
+
+            case "3":
+                {
+                    var reports =
+                        await service.GetStudentsWithoutEnrollmentsAsync();
+
+                    Console.WriteLine("\n--- Students Without Enrollments ---");
+
+                    if (reports.Count == 0)
+                    {
+                        Console.WriteLine("All students have enrollments, or no students exist.");
+                        break;
+                    }
+
+                    foreach (var report in reports)
+                    {
+                        Console.WriteLine(
+                            $"ID: {report.StudentId}, Name: {report.Name}");
+                    }
+
+                    break;
+                }
+
+            case "4":
+                {
+                    var reports =
+                        await service.GetCoursesWithoutEnrollmentsAsync();
+
+                    Console.WriteLine("\n--- Courses Without Enrollments ---");
+
+                    if (reports.Count == 0)
+                    {
+                        Console.WriteLine("All courses have enrollments, or no courses exist.");
+                        break;
+                    }
+
+                    foreach (var report in reports)
+                    {
+                        Console.WriteLine(
+                            $"ID: {report.CourseId}, Course: {report.CourseName}");
+                    }
+
+                    break;
+                }
+
+            case "0":
+                return;
+
+            default:
+                Console.WriteLine("Invalid option. Try again.");
+                break;
+        }
+    }
+}
 static void PrintCourse(Course course)
 {
     Console.WriteLine(
@@ -990,4 +1113,29 @@ static void PrintCourse(Course course)
         $"Fee: {course.Fee:C} | " +
         $"Department ID: {course.DepartmentId} | " +
         $"Active: {course.IsActive}");
+}
+static async Task ViewAuditLogs(AuditLogService service)
+{
+    Console.WriteLine("\n===== RECENT AUDIT LOGS =====");
+
+    var logs = await service.GetRecentAsync();
+
+    if (logs.Count == 0)
+    {
+        Console.WriteLine("No audit logs found.");
+        return;
+    }
+
+    foreach (var log in logs)
+    {
+        Console.WriteLine(
+            $"ID: {log.AuditId} | " +
+            $"Action: {log.Action} | " +
+            $"Entity: {log.EntityName} | " +
+            $"Entity ID: {log.EntityId?.ToString() ?? "N/A"}");
+
+        Console.WriteLine($"Details: {log.Details}");
+        Console.WriteLine($"Date: {log.CreatedAt}");
+        Console.WriteLine("----------------------------------------");
+    }
 }

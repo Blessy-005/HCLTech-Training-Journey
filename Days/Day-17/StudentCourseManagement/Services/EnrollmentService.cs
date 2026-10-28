@@ -17,7 +17,7 @@ public class EnrollmentService
     {
         ValidateEnrollment(enrollment);
 
-        return await _repository.AddAsync(enrollment);
+        return await _repository.AddWithAuditAsync(enrollment);
     }
 
     public Task<List<Enrollment>> GetAllAsync()
