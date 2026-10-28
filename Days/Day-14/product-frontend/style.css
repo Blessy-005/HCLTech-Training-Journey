@@ -1,0 +1,23 @@
+body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f6f8; color: #222; }
+header { background: #1f3a5f; color: #fff; padding: 16px 24px; }
+header h1 { margin: 0; }
+main { max-width: 1000px; margin: 20px auto; padding: 0 16px; }
+
+.card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 20px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+
+input, textarea, button { padding: 8px; font-size: 14px; border: 1px solid #bbb; border-radius: 5px; }
+input, textarea { flex: 1 1 180px; }
+button { cursor: pointer; background: #1f3a5f; color: #fff; border: none; }
+button.gray { background: #6b7a8f; }
+button.red { background: #c0392b; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e3e3e3; font-size: 14px; }
+th { background: #eef1f5; }
+.muted { color: #777; display: none; }
+
+#msg { display: none; padding: 10px; border-radius: 5px; margin-bottom: 12px; white-space: pre-line; }
+#msg.ok  { display: block; background: #e3f6e8; color: #1b6b32; }
+#msg.err { display: block; background: #fde8e6; color: #a1291d; }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Catalogue</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>Product Catalogue</h1></header>
+
+  <main>
+    <div id="msg"></div>
+
+    <div class="card">
+      <h3 id="formTitle">Add product</h3>
+      <input type="hidden" id="pid">
+      <div class="row">
+        <input id="name" placeholder="Name *">
+        <input id="category" placeholder="Category *">
+        <input id="price" type="number" step="0.01" placeholder="Price *">
+        <input id="stock" type="number" placeholder="Stock quantity *">
+      </div>
+      <div class="row">
+        <textarea id="description" rows="2" placeholder="Description (optional)"></textarea>
+      </div>
+      <div class="row">
+        <button onclick="saveProduct()">Save</button>
+        <button class="gray" onclick="resetForm()">Clear</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <input id="fCategory" placeholder="Filter by category (e.g. Books)">
+        <input id="fSearch" placeholder="Search (e.g. pen)">
+        <button onclick="loadProducts()">Apply</button>
+        <button class="gray" onclick="clearFilters()">Reset</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th></th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p id="empty" class="muted">No products found.</p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
