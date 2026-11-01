@@ -10,7 +10,7 @@ namespace MovieTicketBooking.Repositories.Interfaces
             string? seatType,
             int pageNumber,
             int pageSize);
-
+        Task<List<Seat>> GetActiveByScreenIdAsync(int screenId);
         Task<Seat?> GetByIdAsync(int id);
 
         Task<Seat> AddAsync(Seat seat);
@@ -25,5 +25,5 @@ namespace MovieTicketBooking.Repositories.Interfaces
             int screenId,
             string seatNumber,
             int? excludeSeatId = null);
-    }
+    } 
 }

@@ -10,15 +10,21 @@ namespace MovieTicketBooking.Services
         private readonly IShowRepository _showRepository;
         private readonly IMovieRepository _movieRepository;
         private readonly IScreenRepository _screenRepository;
+        private readonly ISeatRepository _seatRepository;
+        private readonly IShowSeatRepository _showSeatRepository;
 
         public ShowService(
-            IShowRepository showRepository,
-            IMovieRepository movieRepository,
-            IScreenRepository screenRepository)
+    IShowRepository showRepository,
+    IMovieRepository movieRepository,
+    IScreenRepository screenRepository,
+    ISeatRepository seatRepository,
+    IShowSeatRepository showSeatRepository)
         {
             _showRepository = showRepository;
             _movieRepository = movieRepository;
             _screenRepository = screenRepository;
+            _seatRepository = seatRepository;
+            _showSeatRepository = showSeatRepository;
         }
 
         public async Task<List<ShowResponseDto>> GetAllAsync(ShowQueryDto query)
@@ -85,6 +91,24 @@ namespace MovieTicketBooking.Services
             };
 
             var createdShow = await _showRepository.AddAsync(show);
+
+            // Get all active physical seats in this screen
+            var seats = await _seatRepository.GetActiveByScreenIdAsync(
+                createdShow.ScreenId);
+
+            // Create an availability record for every physical seat
+            var showSeats = seats.Select(seat => new ShowSeat
+            {
+                ShowId = createdShow.Id,
+                SeatId = seat.Id,
+                Status = "Available"
+            }).ToList();
+
+            // Save all ShowSeat records
+            if (showSeats.Any())
+            {
+                await _showSeatRepository.AddRangeAsync(showSeats);
+            }
 
             createdShow.Movie = movie;
             createdShow.Screen = screen;

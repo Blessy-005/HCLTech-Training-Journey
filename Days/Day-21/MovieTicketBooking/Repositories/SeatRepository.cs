@@ -55,6 +55,13 @@ namespace MovieTicketBooking.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+        public async Task<List<Seat>> GetActiveByScreenIdAsync(int screenId)
+        {
+            return await _context.Seats
+                .Where(s => s.ScreenId == screenId && s.IsActive)
+                .OrderBy(s => s.SeatNumber)
+                .ToListAsync();
+        }
 
         public async Task<Seat?> GetByIdAsync(int id)
         {
