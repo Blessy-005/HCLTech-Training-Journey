@@ -55,5 +55,13 @@ namespace MovieTicketBooking.Repositories
             _context.ShowSeats.Update(showSeat);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<ShowSeat>> GetByIdsAsync(List<int> showSeatIds)
+        {
+            return await _context.ShowSeats
+                .Include(ss => ss.Seat)
+                .Include(ss => ss.Show)
+                .Where(ss => showSeatIds.Contains(ss.Id))
+                .ToListAsync();
+        }
     }
 }

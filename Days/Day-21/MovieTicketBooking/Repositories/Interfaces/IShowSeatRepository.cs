@@ -13,5 +13,6 @@ namespace MovieTicketBooking.Repositories.Interfaces
         Task AddRangeAsync(IEnumerable<ShowSeat> showSeats);
 
         Task UpdateAsync(ShowSeat showSeat);
+        Task<List<ShowSeat>> GetByIdsAsync(List<int> showSeatIds);
     }
 }
