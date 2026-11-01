@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MovieTicketBooking.Data;
+using MovieTicketBooking.Repositories;
+using MovieTicketBooking.Repositories.Interfaces;
+using MovieTicketBooking.Services;
+using MovieTicketBooking.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register repositories
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
+// Register services
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
