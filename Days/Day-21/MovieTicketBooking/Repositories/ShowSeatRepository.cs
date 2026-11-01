@@ -20,7 +20,7 @@ namespace MovieTicketBooking.Repositories
         {
             var query = _context.ShowSeats
                 .Include(ss => ss.Seat!)
-                    .ThenInclude(s => s.Screen)
+                    .ThenInclude(s => s!.Screen)
                 .Include(ss => ss.Show)
                 .Where(ss => ss.ShowId == showId)
                 .AsQueryable();
@@ -39,7 +39,7 @@ namespace MovieTicketBooking.Repositories
         {
             return await _context.ShowSeats
                 .Include(ss => ss.Seat)
-                    .ThenInclude(s => s.Screen)
+                    .ThenInclude(s => s!.Screen)
                 .Include(ss => ss.Show)
                 .FirstOrDefaultAsync(ss => ss.Id == id);
         }
@@ -78,3 +78,4 @@ namespace MovieTicketBooking.Repositories
         }
     }
 }
+

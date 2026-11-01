@@ -25,7 +25,7 @@ namespace MovieTicketBooking.Repositories
             var query = _context.Shows
                 .Include(s => s.Movie)
                 .Include(s => s.Screen)
-                    .ThenInclude(sc => sc.Theatre)
+                    .ThenInclude(sc => sc!.Theatre)
                 .AsQueryable();
 
             if (movieId.HasValue)
@@ -58,7 +58,7 @@ namespace MovieTicketBooking.Repositories
             return await _context.Shows
                 .Include(s => s.Movie)
                 .Include(s => s.Screen!)
-                    .ThenInclude(sc => sc.Theatre)
+                    .ThenInclude(sc => sc!.Theatre)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -143,3 +143,4 @@ namespace MovieTicketBooking.Repositories
         }
     }
 }
+
