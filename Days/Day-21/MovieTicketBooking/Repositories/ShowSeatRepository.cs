@@ -19,7 +19,7 @@ namespace MovieTicketBooking.Repositories
             string? status)
         {
             var query = _context.ShowSeats
-                .Include(ss => ss.Seat)
+                .Include(ss => ss.Seat!)
                     .ThenInclude(s => s.Screen)
                 .Include(ss => ss.Show)
                 .Where(ss => ss.ShowId == showId)
@@ -31,7 +31,7 @@ namespace MovieTicketBooking.Repositories
             }
 
             return await query
-                .OrderBy(ss => ss.Seat.SeatNumber)
+                .OrderBy(ss => ss.Seat!.SeatNumber)
                 .ToListAsync();
         }
 
@@ -62,6 +62,19 @@ namespace MovieTicketBooking.Repositories
                 .Include(ss => ss.Show)
                 .Where(ss => showSeatIds.Contains(ss.Id))
                 .ToListAsync();
+        }
+        public async Task<bool> HasAnyBookingsAsync(int showId)
+        {
+            return await _context.ShowSeats
+                .AnyAsync(ss =>
+                    ss.ShowId == showId &&
+                    _context.BookingSeats.Any(bs =>
+                        bs.ShowSeatId == ss.Id));
+        }
+        public async Task<bool> HasAnyShowSeatsAsync(int seatId)
+        {
+            return await _context.ShowSeats
+                .AnyAsync(ss => ss.SeatId == seatId);
         }
     }
 }

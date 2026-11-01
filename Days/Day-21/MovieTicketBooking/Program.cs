@@ -1,4 +1,7 @@
+
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,11 +36,47 @@ builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.AddScoped<IShowService, ShowService>();
 builder.Services.AddScoped<IShowSeatService, ShowSeatService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Centralized exception handling
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionFeature =
+            context.Features.Get<IExceptionHandlerFeature>();
+
+        var exception = exceptionFeature?.Error;
+
+        context.Response.ContentType = "application/json";
+
+        if (exception is ArgumentException)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status400BadRequest;
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = exception.Message
+            });
+        }
+        else
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status500InternalServerError;
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = "An unexpected server error occurred."
+            });
+        }
+    });
+});
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

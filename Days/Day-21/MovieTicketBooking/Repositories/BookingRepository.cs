@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using MovieTicketBooking.Data;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
@@ -61,6 +62,9 @@ namespace MovieTicketBooking.Repositories
                 .Include(b => b.BookingSeats)
                     .ThenInclude(bs => bs.ShowSeat)
                         .ThenInclude(ss => ss.Seat)
+                .Include(b => b.BookingSeats)
+                    .ThenInclude(bs => bs.ShowSeat)
+                        .ThenInclude(ss => ss.Show)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -74,7 +78,7 @@ namespace MovieTicketBooking.Repositories
 
         public async Task UpdateAsync(Booking booking)
         {
-            _context.Bookings.Update(booking);
+            // The booking was loaded and is already tracked by EF Core.
             await _context.SaveChangesAsync();
         }
     }

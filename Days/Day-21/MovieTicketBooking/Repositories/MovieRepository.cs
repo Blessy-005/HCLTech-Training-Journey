@@ -30,28 +30,34 @@ namespace MovieTicketBooking.Repositories
             await _context.SaveChangesAsync();
         }
 
+
         public async Task<IEnumerable<Movie>> GetAllAsync(
-    string? search,
-    string? language,
-    string? genre,
-    int pageNumber,
-    int pageSize)
+            string? search,
+            string? language,
+            string? genre,
+            int pageNumber,
+            int pageSize)
         {
-            var query = _context.Movies.AsQueryable();
+            var query = _context.Movies
+                .Where(m => m.IsActive)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(m => m.Title.Contains(search));
+                query = query.Where(m =>
+                    m.Title.Contains(search.Trim()));
             }
 
             if (!string.IsNullOrWhiteSpace(language))
             {
-                query = query.Where(m => m.Language == language);
+                query = query.Where(m =>
+                    m.Language == language.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(genre))
             {
-                query = query.Where(m => m.Genre == genre);
+                query = query.Where(m =>
+                    m.Genre == genre.Trim());
             }
 
             return await query

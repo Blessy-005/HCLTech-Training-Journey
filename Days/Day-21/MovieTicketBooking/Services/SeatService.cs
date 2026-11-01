@@ -10,12 +10,15 @@ namespace MovieTicketBooking.Services
         private readonly ISeatRepository _seatRepository;
         private readonly IScreenRepository _screenRepository;
 
+        private readonly IShowSeatRepository _showSeatRepository;
         public SeatService(
-            ISeatRepository seatRepository,
-            IScreenRepository screenRepository)
+     ISeatRepository seatRepository,
+     IScreenRepository screenRepository,
+     IShowSeatRepository showSeatRepository)
         {
             _seatRepository = seatRepository;
             _screenRepository = screenRepository;
+            _showSeatRepository = showSeatRepository;
         }
 
         public async Task<IEnumerable<SeatResponseDto>> GetAllAsync(
@@ -43,6 +46,7 @@ namespace MovieTicketBooking.Services
             return MapToResponseDto(seat);
         }
 
+
         public async Task<SeatResponseDto> CreateAsync(
             CreateSeatDto dto)
         {
@@ -54,9 +58,12 @@ namespace MovieTicketBooking.Services
                     "The selected screen does not exist or is inactive.");
             }
 
+            string seatNumber = dto.SeatNumber.Trim().ToUpperInvariant();
+            string seatType = dto.SeatType.Trim();
+
             bool exists = await _seatRepository.SeatNumberExistsAsync(
                 dto.ScreenId,
-                dto.SeatNumber);
+                seatNumber);
 
             if (exists)
             {
@@ -66,8 +73,8 @@ namespace MovieTicketBooking.Services
 
             var seat = new Seat
             {
-                SeatNumber = dto.SeatNumber,
-                SeatType = dto.SeatType,
+                SeatNumber = seatNumber,
+                SeatType = seatType,
                 ScreenId = dto.ScreenId,
                 IsActive = true,
                 Screen = screen
@@ -77,6 +84,7 @@ namespace MovieTicketBooking.Services
 
             return MapToResponseDto(createdSeat);
         }
+
 
         public async Task<IEnumerable<SeatResponseDto>> CreateBulkAsync(
             IEnumerable<CreateSeatDto> seats)
@@ -91,13 +99,12 @@ namespace MovieTicketBooking.Services
 
             // Check duplicate screen and seat-number combinations
             var duplicates = seatList
-                .GroupBy(s => new
-                {
-                    s.ScreenId,
-                    SeatNumber = s.SeatNumber.Trim()
-                })
-                .Any(g => g.Count() > 1);
-
+    .GroupBy(s => new
+    {
+        s.ScreenId,
+        SeatNumber = s.SeatNumber.Trim().ToUpperInvariant()
+    })
+    .Any(g => g.Count() > 1);
             if (duplicates)
             {
                 throw new ArgumentException(
@@ -123,9 +130,11 @@ namespace MovieTicketBooking.Services
             // Validate existing seat numbers before inserting
             foreach (var dto in seatList)
             {
+                string seatNumber = dto.SeatNumber.Trim().ToUpperInvariant();
+
                 bool exists = await _seatRepository.SeatNumberExistsAsync(
                     dto.ScreenId,
-                    dto.SeatNumber);
+                    seatNumber);
 
                 if (exists)
                 {
@@ -137,8 +146,8 @@ namespace MovieTicketBooking.Services
             // Prepare all seats
             var newSeats = seatList.Select(dto => new Seat
             {
-                SeatNumber = dto.SeatNumber.Trim(),
-                SeatType = dto.SeatType,
+                SeatNumber = dto.SeatNumber.Trim().ToUpperInvariant(),
+                SeatType = dto.SeatType.Trim(),
                 ScreenId = dto.ScreenId,
                 IsActive = true,
                 Screen = screens[dto.ScreenId]
@@ -160,6 +169,14 @@ namespace MovieTicketBooking.Services
             {
                 return false;
             }
+            bool hasShowHistory =
+    await _showSeatRepository.HasAnyShowSeatsAsync(id);
+
+            if (hasShowHistory)
+            {
+                throw new ArgumentException(
+                    "This seat cannot be modified because it has already been assigned to a show.");
+            }
 
             var screen = await _screenRepository.GetByIdAsync(dto.ScreenId);
 
@@ -169,9 +186,12 @@ namespace MovieTicketBooking.Services
                     "The selected screen does not exist or is inactive.");
             }
 
+            string seatNumber = dto.SeatNumber.Trim().ToUpperInvariant();
+            string seatType = dto.SeatType.Trim();
+
             bool exists = await _seatRepository.SeatNumberExistsAsync(
                 dto.ScreenId,
-                dto.SeatNumber,
+                seatNumber,
                 id);
 
             if (exists)
@@ -180,8 +200,8 @@ namespace MovieTicketBooking.Services
                     "This seat number already exists in the selected screen.");
             }
 
-            seat.SeatNumber = dto.SeatNumber;
-            seat.SeatType = dto.SeatType;
+            seat.SeatNumber = seatNumber;
+            seat.SeatType = seatType;
             seat.ScreenId = dto.ScreenId;
             seat.IsActive = dto.IsActive;
             seat.Screen = screen;
@@ -190,6 +210,7 @@ namespace MovieTicketBooking.Services
 
             return true;
         }
+
 
         public async Task<bool> DeleteAsync(int id)
         {
@@ -200,6 +221,15 @@ namespace MovieTicketBooking.Services
                 return false;
             }
 
+            bool hasShowHistory =
+                await _showSeatRepository.HasAnyShowSeatsAsync(id);
+
+            if (hasShowHistory)
+            {
+                throw new ArgumentException(
+                    "This seat cannot be deactivated because it has already been assigned to a show.");
+            }
+
             // Soft delete
             seat.IsActive = false;
 
@@ -207,6 +237,7 @@ namespace MovieTicketBooking.Services
 
             return true;
         }
+
 
         private static SeatResponseDto MapToResponseDto(Seat seat)
         {

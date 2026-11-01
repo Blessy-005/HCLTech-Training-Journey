@@ -25,5 +25,8 @@ namespace MovieTicketBooking.Repositories.Interfaces
             DateTime startTime,
             DateTime endTime,
             int? excludeShowId = null);
+        Task<Show> AddWithSeatsAsync(
+    Show show,
+    List<Seat> seats);
     }
 }

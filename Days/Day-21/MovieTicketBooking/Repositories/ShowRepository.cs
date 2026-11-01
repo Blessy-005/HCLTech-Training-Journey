@@ -57,7 +57,7 @@ namespace MovieTicketBooking.Repositories
         {
             return await _context.Shows
                 .Include(s => s.Movie)
-                .Include(s => s.Screen)
+                .Include(s => s.Screen!)
                     .ThenInclude(sc => sc.Theatre)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
@@ -104,6 +104,42 @@ namespace MovieTicketBooking.Repositories
             }
 
             return await query.AnyAsync();
+        }
+        public async Task<Show> AddWithSeatsAsync(
+    Show show,
+    List<Seat> seats)
+        {
+            await using var transaction =
+                await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Step 1: Save the Show record.
+                await _context.Shows.AddAsync(show);
+                await _context.SaveChangesAsync();
+
+                // Step 2: Create availability records for every seat.
+                var showSeats = seats.Select(seat => new ShowSeat
+                {
+                    ShowId = show.Id,
+                    SeatId = seat.Id,
+                    Status = "Available"
+                }).ToList();
+
+                // Step 3: Save all ShowSeat records.
+                await _context.ShowSeats.AddRangeAsync(showSeats);
+                await _context.SaveChangesAsync();
+
+                // Step 4: Commit both operations together.
+                await transaction.CommitAsync();
+
+                return show;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

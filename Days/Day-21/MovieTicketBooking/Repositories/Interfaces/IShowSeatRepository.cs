@@ -14,5 +14,7 @@ namespace MovieTicketBooking.Repositories.Interfaces
 
         Task UpdateAsync(ShowSeat showSeat);
         Task<List<ShowSeat>> GetByIdsAsync(List<int> showSeatIds);
+        Task<bool> HasAnyBookingsAsync(int showId);
+        Task<bool> HasAnyShowSeatsAsync(int seatId);
     }
 }

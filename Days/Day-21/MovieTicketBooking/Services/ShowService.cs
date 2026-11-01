@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.DTOs.Shows;
+﻿
+using MovieTicketBooking.DTOs.Shows;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -14,11 +15,11 @@ namespace MovieTicketBooking.Services
         private readonly IShowSeatRepository _showSeatRepository;
 
         public ShowService(
-    IShowRepository showRepository,
-    IMovieRepository movieRepository,
-    IScreenRepository screenRepository,
-    ISeatRepository seatRepository,
-    IShowSeatRepository showSeatRepository)
+            IShowRepository showRepository,
+            IMovieRepository movieRepository,
+            IScreenRepository screenRepository,
+            ISeatRepository seatRepository,
+            IShowSeatRepository showSeatRepository)
         {
             _showRepository = showRepository;
             _movieRepository = movieRepository;
@@ -27,7 +28,8 @@ namespace MovieTicketBooking.Services
             _showSeatRepository = showSeatRepository;
         }
 
-        public async Task<List<ShowResponseDto>> GetAllAsync(ShowQueryDto query)
+        public async Task<List<ShowResponseDto>> GetAllAsync(
+            ShowQueryDto query)
         {
             var shows = await _showRepository.GetAllAsync(
                 query.MovieId,
@@ -50,35 +52,49 @@ namespace MovieTicketBooking.Services
             return MapToResponseDto(show);
         }
 
-        public async Task<ShowResponseDto> CreateAsync(CreateShowDto dto)
+        public async Task<ShowResponseDto> CreateAsync(
+            CreateShowDto dto)
         {
             if (dto.EndTime <= dto.StartTime)
-                throw new ArgumentException("End time must be after start time.");
+                throw new ArgumentException(
+                    "End time must be after start time.");
 
             var movie = await _movieRepository.GetByIdAsync(dto.MovieId);
 
             if (movie == null)
-                throw new ArgumentException("Movie not found or inactive.");
+                throw new ArgumentException(
+                    "Movie not found or inactive.");
 
             var screen = await _screenRepository.GetByIdAsync(dto.ScreenId);
 
             if (screen == null)
-                throw new ArgumentException("Screen not found or inactive.");
+                throw new ArgumentException(
+                    "Screen not found or inactive.");
 
-            var expectedEndTime = dto.StartTime.AddMinutes(movie.DurationMinutes);
+            var expectedEndTime =
+                dto.StartTime.AddMinutes(movie.DurationMinutes);
 
             if (dto.EndTime != expectedEndTime)
                 throw new ArgumentException(
                     "End time must match the movie duration.");
 
-            var hasOverlap = await _showRepository.HasOverlappingShowAsync(
-                dto.ScreenId,
-                dto.StartTime,
-                dto.EndTime);
+            var hasOverlap =
+                await _showRepository.HasOverlappingShowAsync(
+                    dto.ScreenId,
+                    dto.StartTime,
+                    dto.EndTime);
 
             if (hasOverlap)
                 throw new ArgumentException(
                     "Another show is already scheduled on this screen during this time.");
+
+            var seats =
+                await _seatRepository.GetActiveByScreenIdAsync(
+                    dto.ScreenId);
+
+            if (seats.Count == 0)
+                throw new ArgumentException(
+                    "This screen has no active seats.");
 
             var show = new Show
             {
@@ -90,25 +106,8 @@ namespace MovieTicketBooking.Services
                 IsActive = true
             };
 
-            var createdShow = await _showRepository.AddAsync(show);
-
-            // Get all active physical seats in this screen
-            var seats = await _seatRepository.GetActiveByScreenIdAsync(
-                createdShow.ScreenId);
-
-            // Create an availability record for every physical seat
-            var showSeats = seats.Select(seat => new ShowSeat
-            {
-                ShowId = createdShow.Id,
-                SeatId = seat.Id,
-                Status = "Available"
-            }).ToList();
-
-            // Save all ShowSeat records
-            if (showSeats.Any())
-            {
-                await _showSeatRepository.AddRangeAsync(showSeats);
-            }
+            var createdShow =
+                await _showRepository.AddWithSeatsAsync(show, seats);
 
             createdShow.Movie = movie;
             createdShow.Screen = screen;
@@ -116,37 +115,59 @@ namespace MovieTicketBooking.Services
             return MapToResponseDto(createdShow);
         }
 
-        public async Task<bool> UpdateAsync(int id, UpdateShowDto dto)
+        public async Task<bool> UpdateAsync(
+            int id,
+            UpdateShowDto dto)
         {
             var show = await _showRepository.GetByIdAsync(id);
 
             if (show == null)
                 return false;
 
+            // Protect existing bookings from schedule changes.
+            var hasBookings =
+    await _showSeatRepository.HasAnyBookingsAsync(id);
+
+            if (hasBookings &&
+    (show.MovieId != dto.MovieId ||
+     show.ScreenId != dto.ScreenId ||
+     show.StartTime != dto.StartTime ||
+     show.EndTime != dto.EndTime ||
+     (show.IsActive && !dto.IsActive)))
+            {
+                throw new ArgumentException(
+                    "Cannot change the movie, screen, schedule, or deactivate a show because it has booking history.");
+            }
+
             if (dto.EndTime <= dto.StartTime)
-                throw new ArgumentException("End time must be after start time.");
+                throw new ArgumentException(
+                    "End time must be after start time.");
 
             var movie = await _movieRepository.GetByIdAsync(dto.MovieId);
 
             if (movie == null)
-                throw new ArgumentException("Movie not found or inactive.");
+                throw new ArgumentException(
+                    "Movie not found or inactive.");
 
             var screen = await _screenRepository.GetByIdAsync(dto.ScreenId);
 
             if (screen == null)
-                throw new ArgumentException("Screen not found or inactive.");
+                throw new ArgumentException(
+                    "Screen not found or inactive.");
 
-            var expectedEndTime = dto.StartTime.AddMinutes(movie.DurationMinutes);
+            var expectedEndTime =
+                dto.StartTime.AddMinutes(movie.DurationMinutes);
 
             if (dto.EndTime != expectedEndTime)
                 throw new ArgumentException(
                     "End time must match the movie duration.");
 
-            var hasOverlap = await _showRepository.HasOverlappingShowAsync(
-                dto.ScreenId,
-                dto.StartTime,
-                dto.EndTime,
-                id);
+            var hasOverlap =
+                await _showRepository.HasOverlappingShowAsync(
+                    dto.ScreenId,
+                    dto.StartTime,
+                    dto.EndTime,
+                    id);
 
             if (hasOverlap)
                 throw new ArgumentException(
@@ -171,13 +192,21 @@ namespace MovieTicketBooking.Services
             if (show == null)
                 return false;
 
+            var hasBookings =
+                await _showSeatRepository.HasAnyBookingsAsync(id);
+
+            if (hasBookings)
+            {
+                throw new ArgumentException(
+                    "Cannot deactivate a show because it has booking history.");
+            }
+
             show.IsActive = false;
 
             await _showRepository.UpdateAsync(show);
 
             return true;
         }
-
         private static ShowResponseDto MapToResponseDto(Show show)
         {
             return new ShowResponseDto
