@@ -1,4 +1,4 @@
-﻿# Movie Ticket Booking System - Testing Guide
+# Movie Ticket Booking System - Testing Guide
 
 ## 1. Testing Environment
 
@@ -168,3 +168,128 @@ Perform the following complete workflow:
 - Update this guide with actual test results.
 - Commit final documentation and testing changes.
 - Push the completed local commits to GitHub.
+## 15. Actual Postman Test Results
+
+**Testing Date:** November 1, 2026
+**Environment:** Local ASP.NET Core Web API, .NET 10, SQL Server Express
+**Testing Tool:** Postman
+**Base URL:** https://localhost:7231
+
+### 15.1 Movies Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all movies | 200 | Passed |
+| Get movie by ID | 200 | Passed |
+| Create movie | 201 | Passed |
+| Update movie | 204 | Passed |
+| Verify updated movie | 200 | Passed |
+| Delete movie (soft delete) | 204 | Passed |
+| Retrieve inactive movie | 404 | Passed |
+
+### 15.2 Theatres Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all theatres | 200 | Passed |
+| Create theatre | 201 | Passed |
+| Get theatre by ID | 200 | Passed |
+| Update theatre | 204 | Passed |
+| Verify updated theatre | 200 | Passed |
+| Delete theatre (soft delete) | 204 | Passed |
+| Retrieve inactive theatre | 404 | Passed |
+| Create replacement active theatre | 201 | Passed |
+
+### 15.3 Screens Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all screens | 200 | Passed |
+| Create screen | 201 | Passed |
+| Get screen by ID | 200 | Passed |
+| Update screen | 204 | Passed |
+| Verify updated screen | 200 | Passed |
+| Delete screen (soft delete) | 204 | Passed |
+| Retrieve inactive screen | 404 | Passed |
+| Create replacement active screen | 201 | Passed |
+
+### 15.4 Seats Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all seats | 200 | Passed |
+| Create individual seat | 201 | Passed |
+| Bulk create seats | 200 | Passed |
+| Reject duplicate seat | 400 | Passed |
+| Get seat by ID | 200 | Passed |
+| Update seat | 204 | Passed |
+| Verify updated seat | 200 | Passed |
+| Delete seat (soft delete) | 204 | Passed |
+| Retrieve inactive seat | 404 | Passed |
+
+### 15.5 Shows Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all shows | 200 | Passed |
+| Create show | 201 | Passed |
+| Get show by ID | 200 | Passed |
+| Reject overlapping show | 400 | Passed |
+| Update show | 200 | Passed |
+| Verify updated ticket price | 200 | Passed |
+
+### 15.6 ShowSeats Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get seats for a show | 200 | Passed |
+| Filter seats by Available status | 200 | Passed |
+| Verify automatic ShowSeat generation | 200 | Passed |
+| Verify booked seat status | 200 | Passed |
+| Verify released seat status | 200 | Passed |
+| Verify seat status after rebooking | 200 | Passed |
+
+### 15.7 Bookings Module
+
+| Test | HTTP Status | Result |
+|---|---:|---|
+| Get all bookings | 200 | Passed |
+| Create booking with two seats | 201 | Passed |
+| Get booking by ID | 200 | Passed |
+| Verify server-calculated total amount | 201 | Passed |
+| Reject duplicate ShowSeat IDs | 400 | Passed |
+| Reject already-booked seats | 400 | Passed |
+| Reject invalid ShowSeat ID | 400 | Passed |
+| Reject invalid email address | 400 | Passed |
+| Cancel confirmed booking | Successful | Passed |
+| Verify released seats | 200 | Passed |
+| Verify cancelled booking history | 200 | Passed |
+| Reject repeated cancellation | 400 | Passed |
+| Rebook a previously released seat | 201 | Passed |
+| Verify final seat availability | 200 | Passed |
+
+### 15.8 End-to-End Booking Scenario
+
+The following workflow was successfully tested:
+
+1. Created a movie, theatre, screen, and physical seats.
+2. Created a future show for Interstellar.
+3. Verified automatic generation of four ShowSeat records.
+4. Retrieved available seats for the show.
+5. Created Booking ID 1 for two seats.
+6. Verified the total amount of ₹440 (2 × ₹220).
+7. Confirmed that both selected seats changed to Booked.
+8. Cancelled Booking ID 1.
+9. Confirmed that both seats returned to Available.
+10. Verified that the cancelled booking history remained accessible.
+11. Successfully created Booking ID 2 using a previously released seat.
+12. Confirmed that the rebooked seat changed back to Booked.
+
+### 15.9 Testing Notes
+
+- All recorded Postman tests returned the expected successful or validation status codes.
+- Booking totals were calculated by the server using the show's ticket price.
+- Booking cancellation released seats while preserving booking history.
+- A previously released seat could be booked again.
+- The update-show endpoint returned HTTP 200 with a success message rather than HTTP 204.
+- Tests not explicitly recorded in this section remain part of the planned testing checklist and should not be considered verified.
