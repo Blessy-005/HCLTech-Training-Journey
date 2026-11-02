@@ -11,6 +11,11 @@ namespace MovieTicketBooking.Models
 
         public string CustomerEmail { get; set; } = string.Empty;
 
+        // Link booking to the registered customer
+        public string? UserId { get; set; }
+
+        public ApplicationUser? User { get; set; }
+
         public DateTime BookingDate { get; set; } = DateTime.UtcNow;
 
         public decimal TotalAmount { get; set; }

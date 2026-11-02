@@ -20,13 +20,21 @@ namespace MovieTicketBooking.Repositories
             string? status,
             DateTime? bookingDate,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            string? userId)
         {
             var query = _context.Bookings
                 .Include(b => b.BookingSeats)
                     .ThenInclude(bs => bs.ShowSeat)
                         .ThenInclude(ss => ss!.Seat)
                 .AsQueryable();
+
+            // Restrict results to the logged-in customer.
+            // Admin passes null to see all bookings.
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                query = query.Where(b => b.UserId == userId);
+            }
 
             if (!string.IsNullOrWhiteSpace(customerEmail))
             {
@@ -78,10 +86,8 @@ namespace MovieTicketBooking.Repositories
 
         public async Task UpdateAsync(Booking booking)
         {
-            // The booking was loaded and is already tracked by EF Core.
+            // The booking is already tracked by EF Core.
             await _context.SaveChangesAsync();
         }
     }
 }
-
-

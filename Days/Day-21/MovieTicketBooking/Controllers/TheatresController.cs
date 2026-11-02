@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketBooking.DTOs.Theatres;
 using MovieTicketBooking.Services.Interfaces;
-
+using Microsoft.AspNetCore.Authorization;
 namespace MovieTicketBooking.Controllers
 {
     [Route("api/[controller]")]
@@ -42,7 +42,7 @@ namespace MovieTicketBooking.Controllers
             return Ok(theatre);
         }
 
-        // POST: api/theatres
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromBody] CreateTheatreDto dto)
@@ -55,7 +55,7 @@ namespace MovieTicketBooking.Controllers
                 theatre);
         }
 
-        // PUT: api/theatres/1
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
             int id,
@@ -74,7 +74,7 @@ namespace MovieTicketBooking.Controllers
             return NoContent();
         }
 
-        // DELETE: api/theatres/1
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

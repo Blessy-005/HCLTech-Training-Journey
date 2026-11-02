@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MovieTicketBooking.Models;
 
 namespace MovieTicketBooking.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options)
@@ -13,19 +15,12 @@ namespace MovieTicketBooking.Data
 
         // Database tables
         public DbSet<Movie> Movies { get; set; }
-
         public DbSet<Theatre> Theatres { get; set; }
-
         public DbSet<Screen> Screens { get; set; }
-
         public DbSet<Seat> Seats { get; set; }
-
         public DbSet<Show> Shows { get; set; }
-
         public DbSet<ShowSeat> ShowSeats { get; set; }
-
         public DbSet<Booking> Bookings { get; set; }
-
         public DbSet<BookingSeat> BookingSeats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -153,6 +148,12 @@ namespace MovieTicketBooking.Data
                 entity.Property(b => b.Status)
                     .IsRequired()
                     .HasMaxLength(20);
+
+                // Link booking to Identity user
+                entity.HasOne(b => b.User)
+                    .WithMany()
+                    .HasForeignKey(b => b.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             // BookingSeat configuration

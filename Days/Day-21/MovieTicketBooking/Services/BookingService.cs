@@ -1,11 +1,12 @@
-﻿
+
 using System.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MovieTicketBooking.Data;
 using MovieTicketBooking.DTOs.Bookings;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace MovieTicketBooking.Services
 {
@@ -14,43 +15,62 @@ namespace MovieTicketBooking.Services
         private readonly IBookingRepository _bookingRepository;
         private readonly IShowSeatRepository _showSeatRepository;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public BookingService(
             IBookingRepository bookingRepository,
             IShowSeatRepository showSeatRepository,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _bookingRepository = bookingRepository;
             _showSeatRepository = showSeatRepository;
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<List<BookingResponseDto>> GetAllAsync(
-            BookingQueryDto query)
+            BookingQueryDto query,
+            string userId,
+            bool isAdmin)
         {
             var bookings = await _bookingRepository.GetAllAsync(
-                query.CustomerEmail,
+                isAdmin ? query.CustomerEmail : null,
                 query.Status,
                 query.BookingDate,
                 query.PageNumber,
-                query.PageSize);
+                query.PageSize,
+                isAdmin ? null : userId);
 
             return bookings.Select(MapToResponseDto).ToList();
         }
 
-        public async Task<BookingResponseDto?> GetByIdAsync(int id)
+        public async Task<BookingResponseDto?> GetByIdAsync(
+            int id,
+            string userId,
+            bool isAdmin)
         {
             var booking = await _bookingRepository.GetByIdAsync(id);
 
             if (booking == null)
                 return null;
 
+            if (!isAdmin && booking.UserId != userId)
+                return null;
+
             return MapToResponseDto(booking);
         }
 
         public async Task<BookingResponseDto> CreateAsync(
-            CreateBookingDto dto)
+            CreateBookingDto dto,
+            string userId)
         {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new UnauthorizedAccessException(
+                    "Authenticated user was not found.");
+
             var seatIds = dto.ShowSeatIds;
 
             if (seatIds == null || seatIds.Count == 0)
@@ -103,8 +123,9 @@ namespace MovieTicketBooking.Services
 
             var booking = new Booking
             {
-                CustomerName = dto.CustomerName.Trim(),
-                CustomerEmail = dto.CustomerEmail.Trim(),
+                UserId = user.Id,
+                CustomerName = user.FullName,
+                CustomerEmail = user.Email ?? string.Empty,
                 BookingDate = DateTime.UtcNow,
                 TotalAmount = totalAmount,
                 Status = "Confirmed",
@@ -122,7 +143,6 @@ namespace MovieTicketBooking.Services
                 showSeat.Status = "Booked";
             }
 
-            // Saves booking, booking seats and updated seat statuses.
             await _bookingRepository.AddAsync(booking);
 
             await transaction.CommitAsync();
@@ -130,8 +150,10 @@ namespace MovieTicketBooking.Services
             return MapToResponseDto(booking);
         }
 
-
-        public async Task<bool> CancelAsync(int id)
+        public async Task<bool> CancelAsync(
+            int id,
+            string userId,
+            bool isAdmin)
         {
             await using var transaction =
                 await _context.Database.BeginTransactionAsync(
@@ -141,6 +163,9 @@ namespace MovieTicketBooking.Services
                 await _bookingRepository.GetByIdAsync(id);
 
             if (booking == null)
+                return false;
+
+            if (!isAdmin && booking.UserId != userId)
                 return false;
 
             if (booking.Status != "Confirmed")
@@ -158,14 +183,12 @@ namespace MovieTicketBooking.Services
 
             booking.Status = "Cancelled";
 
-            // Saves booking and ShowSeat changes together.
             await _bookingRepository.UpdateAsync(booking);
 
             await transaction.CommitAsync();
 
             return true;
         }
-
 
         private static BookingResponseDto MapToResponseDto(
             Booking booking)
@@ -193,3 +216,4 @@ namespace MovieTicketBooking.Services
         }
     }
 }
+

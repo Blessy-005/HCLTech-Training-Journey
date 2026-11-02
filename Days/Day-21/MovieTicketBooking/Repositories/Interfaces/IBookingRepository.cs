@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.Models;
+﻿
+using MovieTicketBooking.Models;
 
 namespace MovieTicketBooking.Repositories.Interfaces
 {
@@ -9,7 +10,8 @@ namespace MovieTicketBooking.Repositories.Interfaces
             string? status,
             DateTime? bookingDate,
             int pageNumber,
-            int pageSize);
+            int pageSize,
+            string? userId);
 
         Task<Booking?> GetByIdAsync(int id);
 
