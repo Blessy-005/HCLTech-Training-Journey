@@ -31,12 +31,12 @@ namespace MovieTicketBooking.Repositories
         }
 
 
-        public async Task<IEnumerable<Movie>> GetAllAsync(
-            string? search,
-            string? language,
-            string? genre,
-            int pageNumber,
-            int pageSize)
+        public async Task<(IEnumerable<Movie> Items, int TotalCount)> GetAllAsync(
+    string? search,
+    string? language,
+    string? genre,
+    int pageNumber,
+    int pageSize)
         {
             var query = _context.Movies
                 .Where(m => m.IsActive)
@@ -60,11 +60,18 @@ namespace MovieTicketBooking.Repositories
                     m.Genre == genre.Trim());
             }
 
-            return await query
+            // Step 1: Count matching movies before pagination
+            var totalCount = await query.CountAsync();
+
+            // Step 2: Retrieve only the requested page
+            var movies = await query
                 .OrderBy(m => m.Title)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            // Step 3: Return both values
+            return (movies, totalCount);
         }
 
         public async Task<Movie?> GetByIdAsync(int id)

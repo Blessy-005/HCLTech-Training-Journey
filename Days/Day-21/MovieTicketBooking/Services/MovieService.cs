@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.DTOs.Movies;
+﻿using MovieTicketBooking.DTOs.Common;
+using MovieTicketBooking.DTOs.Movies;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -15,17 +16,17 @@ namespace MovieTicketBooking.Services
         }
 
         // Get all movies with search, filters and pagination
-        public async Task<IEnumerable<MovieResponseDto>> GetAllAsync(
-            MovieQueryDto query)
+        public async Task<PaginationResponseDto<MovieResponseDto>> GetAllAsync(
+    MovieQueryDto query)
         {
-            var movies = await _movieRepository.GetAllAsync(
+            var result = await _movieRepository.GetAllAsync(
                 query.Search,
                 query.Language,
                 query.Genre,
                 query.PageNumber,
                 query.PageSize);
 
-            return movies.Select(movie => new MovieResponseDto
+            var movieDtos = result.Items.Select(movie => new MovieResponseDto
             {
                 Id = movie.Id,
                 Title = movie.Title,
@@ -36,7 +37,19 @@ namespace MovieTicketBooking.Services
                 PosterUrl = movie.PosterUrl,
                 ReleaseDate = movie.ReleaseDate,
                 IsActive = movie.IsActive
-            });
+            }).ToList();
+
+            var totalPages = (int)Math.Ceiling(
+                (double)result.TotalCount / query.PageSize);
+
+            return new PaginationResponseDto<MovieResponseDto>
+            {
+                Items = movieDtos,
+                TotalCount = result.TotalCount,
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                TotalPages = totalPages
+            };
         }
 
         // Get a movie by ID

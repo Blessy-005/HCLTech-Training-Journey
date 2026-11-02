@@ -4,12 +4,12 @@ namespace MovieTicketBooking.Repositories.Interfaces
 {
     public interface IMovieRepository
     {
-        Task<IEnumerable<Movie>> GetAllAsync(
-            string? search,
-            string? language,
-            string? genre,
-            int pageNumber,
-            int pageSize);
+        Task<(IEnumerable<Movie> Items, int TotalCount)> GetAllAsync(
+       string? search,
+       string? language,
+       string? genre,
+       int pageNumber,
+       int pageSize);
 
         Task<Movie?> GetByIdAsync(int id);
 
