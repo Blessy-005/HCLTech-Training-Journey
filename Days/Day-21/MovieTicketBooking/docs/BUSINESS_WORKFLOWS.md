@@ -101,3 +101,30 @@ If an operation fails, the transaction is rolled back.
 - BookingDate is stored using UTC.
 
 The application should use a consistent server time-zone configuration when deployed.
+
+## Authentication and Booking Ownership Workflow
+
+### Customer Registration
+1. Customer submits full name, email, password and confirmation.
+2. Identity validates and creates the account.
+3. Password is securely hashed by ASP.NET Core Identity.
+4. Customer role is assigned.
+5. JWT is generated and returned.
+
+### Customer Login
+1. Customer submits email and password.
+2. Identity validates the credentials.
+3. JWT is generated with user and role claims.
+
+### Booking Ownership
+1. Authenticated customer selects available show seats.
+2. API identifies the customer through JWT claims.
+3. Booking is associated with the authenticated user's ID.
+4. Customers can view and cancel only their own bookings.
+5. Admin users can access bookings across customers.
+
+### Cancellation
+1. API verifies booking ownership or Admin role.
+2. Booking status is updated.
+3. Seats are released for future availability.
+4. Booking history is retained.

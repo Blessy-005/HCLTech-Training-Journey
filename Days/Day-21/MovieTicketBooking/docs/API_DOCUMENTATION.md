@@ -128,3 +128,26 @@ Actual status codes depend on the controller action and exception handling.
 All endpoints will be verified using Postman.
 
 The testing process includes successful requests, invalid inputs, missing resources, filtering, pagination, booking creation, and cancellation.
+
+## Authentication and Booking Endpoints
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| POST | /api/auth/register | Register a customer | Public |
+| POST | /api/auth/login | Authenticate a user | Public |
+| GET | /api/bookings | Retrieve accessible bookings | Authenticated |
+| GET | /api/bookings/{id} | Retrieve a booking | Owner or Admin |
+| POST | /api/bookings | Create a booking | Authenticated |
+| PUT | /api/bookings/{id}/cancel | Cancel a booking | Owner or Admin |
+
+### Authentication
+
+After successful registration or login, the API returns a JWT access token.
+
+For protected endpoints, send:
+
+Authorization: Bearer <access_token>
+
+New customer registration automatically assigns the Customer role. Administrative operations require the Admin role.
+
+Booking creation accepts show-seat IDs. Customer identity is obtained from the authenticated account rather than from the request body.

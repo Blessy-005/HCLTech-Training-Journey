@@ -107,3 +107,26 @@ ApplicationDbContext manages all eight entities through DbSet properties.
 Entity relationships, indexes, column lengths, decimal precision, and delete behavior are configured in OnModelCreating.
 
 EF Core migrations are used to create and update the SQL Server database schema.
+
+## Identity and Booking Ownership
+
+ASP.NET Core Identity is integrated into the existing MovieTicketBookingDb database.
+
+### ApplicationUser
+Custom ApplicationUser extends IdentityUser and adds FullName.
+
+### Identity Tables
+Identity migration creates the following tables:
+- AspNetUsers
+- AspNetRoles
+- AspNetUserRoles
+- AspNetUserClaims
+- AspNetRoleClaims
+- AspNetUserLogins
+- AspNetUserTokens
+
+### Booking–User Relationship
+- Booking contains a nullable UserId foreign key referencing AspNetUsers.Id.
+- The relationship uses DeleteBehavior.SetNull.
+- Existing historical bookings can remain without an associated user.
+- New bookings are associated with the authenticated user.

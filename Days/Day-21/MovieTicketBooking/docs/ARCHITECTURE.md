@@ -74,3 +74,20 @@ ASP.NET Core dependency injection provides the required implementations to contr
 Version 1 focuses on movie management, theatre and screen management, seat management, show scheduling, show-specific seat availability, booking, and cancellation.
 
 Authentication, online payments, temporary seat holds, notifications, and frontend development are outside Version 1.
+
+## Authentication and Authorization Architecture
+
+The application uses ASP.NET Core Identity and JWT Bearer Authentication.
+
+Authentication flow:
+1. A user registers or logs in through AuthController.
+2. AuthService validates the credentials using UserManager and SignInManager.
+3. A JWT containing user ID, name, email and role claims is generated.
+4. The client sends the token in the Authorization Bearer header.
+5. JWT middleware validates the token.
+6. Authorization policies and role attributes control access to protected endpoints.
+
+Booking ownership:
+- BookingsController obtains the authenticated user's ID from JWT claims.
+- BookingService checks ownership before retrieving or cancelling a booking.
+- Admin users can access bookings across customers.

@@ -88,3 +88,12 @@ Each layer has a separate responsibility. Business rules are implemented in serv
 ## 8. Project Status
 
 Backend modules have been implemented. Final API verification using Postman and documentation validation are part of the project completion process.
+
+## Authentication and Authorization
+
+- Integrated ASP.NET Core Identity for user management.
+- Implemented JWT-based registration and login.
+- Added Admin and Customer roles.
+- Restricted administrative operations to Admin users.
+- Implemented customer-specific booking access and ownership protection.
+- Used ASP.NET Core User Secrets for the JWT signing key.

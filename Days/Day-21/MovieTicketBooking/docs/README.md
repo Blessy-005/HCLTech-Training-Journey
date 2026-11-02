@@ -29,3 +29,18 @@ This folder contains the technical documentation for the Movie Ticket Booking Sy
 
 The Version 1 backend modules have been implemented. Final API testing and verification are documented in `TESTING_GUIDE.md`.
 
+
+## Additional Documentation
+
+Authentication and authorization documentation has been added to the following files:
+
+- PROJECT_OVERVIEW.md
+- ARCHITECTURE.md
+- API_DOCUMENTATION.md
+- BUSINESS_WORKFLOWS.md
+- DATABASE_DESIGN.md
+- TESTING_GUIDE.md
+- VALIDATION_RULES.md
+- GIT_COMMIT_HISTORY.md
+
+These documents cover JWT authentication, Identity integration, role-based authorization, booking ownership, database changes and Postman test results.

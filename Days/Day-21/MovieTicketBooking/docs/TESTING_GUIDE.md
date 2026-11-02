@@ -293,3 +293,30 @@ The following workflow was successfully tested:
 - A previously released seat could be booked again.
 - The update-show endpoint returned HTTP 200 with a success message rather than HTTP 204.
 - Tests not explicitly recorded in this section remain part of the planned testing checklist and should not be considered verified.
+
+## Authentication and Authorization Test Results
+
+The following scenarios were tested using Postman:
+
+| Scenario | Expected Result | Result |
+|---|---|---|
+| Admin login | 200 OK | Passed |
+| Customer registration | 200 OK | Passed |
+| Customer login | 200 OK | Passed |
+| Admin creates a movie | 201 Created | Passed |
+| Customer attempts Admin-only movie creation | 403 Forbidden | Passed |
+| Unauthenticated booking access | 401 Unauthorized | Passed |
+| Customer accesses own booking | 200 OK | Passed |
+| Customer accesses another customer's booking | 404 Not Found | Passed |
+| Customer cancels another customer's booking | 404 Not Found | Passed |
+| Booking owner cancels own booking | 200 OK | Passed |
+| Seat status after cancellation | Available | Passed |
+
+### Areas Where Difficulties Were Faced
+
+1. Integrating ASP.NET Core Identity with the existing database.
+2. Configuring JWT token generation and validation.
+3. Implementing role-based authorization for Admin and Customer.
+4. Managing booking ownership and preventing unauthorized access.
+5. Handling EF Core migrations and database relationships.
+6. Testing authentication, authorization and booking cancellation using Postman.

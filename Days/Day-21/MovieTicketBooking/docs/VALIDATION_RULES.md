@@ -90,3 +90,17 @@
 - ArgumentException is converted to HTTP 400 by centralized exception middleware.
 - Unexpected exceptions return HTTP 500 with a generic error message.
 - Internal exception details are not exposed in the HTTP response.
+
+## Authentication and Authorization Rules
+
+- Registration requires valid user details and password confirmation.
+- Duplicate email registration is rejected.
+- Password validation follows ASP.NET Core Identity password rules.
+- Login requires valid email and password credentials.
+- JWT tokens are validated for issuer, audience, lifetime and signing key.
+- Administrative write operations require the Admin role.
+- Booking endpoints require authentication.
+- Customers can retrieve and cancel only their own bookings.
+- Admin users can access bookings across customers.
+- Customer identity for a booking is taken from authenticated claims, not client-supplied customer details.
+- Unauthorized requests receive 401 or 403 responses as appropriate. Booking ownership failures return 404.

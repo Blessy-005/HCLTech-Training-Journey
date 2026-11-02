@@ -46,3 +46,11 @@ The project uses Conventional Commit-style messages:
 - `fix:` Bug fixes and improvements
 - `docs:` Documentation changes
 - `chore:` Configuration and maintenance changes
+
+## Authentication and Booking Ownership
+
+- Commit: d2b3c26
+- Message: feat(auth): add JWT authentication and booking ownership
+- Changes: Integrated ASP.NET Core Identity, JWT authentication, Admin and Customer roles, booking ownership checks and related EF Core migrations.
+- Branch: main
+- Repository: Blessy-005/HCLTech-Training-Journey
