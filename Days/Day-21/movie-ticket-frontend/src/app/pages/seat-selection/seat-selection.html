@@ -1,0 +1,88 @@
+﻿<nav class="seat-navbar">
+  <a routerLink="/" class="logo">CineBook<span>.</span></a>
+  <a routerLink="/movies" class="back-link">← Back to Movies</a>
+</nav>
+
+<main class="seat-page">
+  <section class="seat-heading">
+    <p class="eyebrow">YOUR MOVIE EXPERIENCE</p>
+    <h1>Select Your <span>Seats.</span></h1>
+    <p>Interstellar · PVR Cinemas · 6:30 PM</p>
+  </section>
+
+  <section class="seat-layout">
+    <div class="seat-area">
+      <div class="screen">
+        <div class="screen-shape"></div>
+        <p>SCREEN THIS WAY</p>
+      </div>
+
+      <div class="seat-legend">
+        <span><i class="available"></i> Available</span>
+        <span><i class="selected"></i> Selected</span>
+        <span><i class="booked"></i> Booked</span>
+      </div>
+
+      <div class="seat-map">
+        @for (row of rows; track row) {
+          <div class="seat-row">
+            <span class="row-label">{{ row }}</span>
+
+            @for (number of seatNumbers; track number) {
+              <button
+                class="seat"
+                [class.selected]="isSelected(row, number)"
+                [class.booked]="isBooked(row, number)"
+                [disabled]="isBooked(row, number)"
+                (click)="toggleSeat(row, number)">
+                {{ number }}
+              </button>
+            }
+
+            <span class="row-label">{{ row }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <aside class="booking-summary">
+      <p class="eyebrow">BOOKING SUMMARY</p>
+      <h2>Interstellar</h2>
+
+      <div class="summary-item">
+        <span>Theatre</span>
+        <strong>PVR Cinemas</strong>
+      </div>
+
+      <div class="summary-item">
+        <span>Show Time</span>
+        <strong>6:30 PM</strong>
+      </div>
+
+      <div class="summary-item">
+        <span>Ticket Price</span>
+        <strong>₹{{ ticketPrice }}</strong>
+      </div>
+
+      <div class="summary-item">
+        <span>Selected Seats</span>
+        <strong>{{ selectedSeats.length }}</strong>
+      </div>
+
+      <div class="selected-seat-list">
+        {{ selectedSeats.length ? selectedSeats.join(', ') : 'No seats selected' }}
+      </div>
+
+      <div class="total">
+        <span>Total Amount</span>
+        <strong>₹{{ totalAmount }}</strong>
+      </div>
+
+      <button class="continue-btn" [disabled]="selectedSeats.length === 0">
+        Continue to Booking
+      </button>
+
+      <a routerLink="/movies" class="cancel-link">Cancel Selection</a>
+    </aside>
+  </section>
+</main>

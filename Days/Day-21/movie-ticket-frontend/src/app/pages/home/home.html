@@ -1,0 +1,124 @@
+﻿
+<nav class="navbar">
+  <div class="logo">CineBook<span>.</span></div>
+
+  <div class="nav-links">
+    <a routerLink="/"  class="active">Home</a>
+    <a routerLink="/movies" >Movies</a>
+    <a href="/#about">About</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="login-btn" routerLink="/login">Login</button>
+    <button class="register-btn" routerLink="/register">Register</button>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="tagline">YOUR CINEMA EXPERIENCE STARTS HERE</p>
+
+      <h1>
+        Discover Movies.<br>
+        Book Your <span>Experience.</span>
+      </h1>
+
+      <p class="hero-description">
+        Explore the latest movies, choose your favourite seats
+        and enjoy the big screen experience.
+      </p>
+
+      <button class="explore-btn" (click)="exploreMovies()">
+        Explore Movies <span>â†’</span>
+      </button>
+
+      <div class="hero-stats">
+        <div>
+          <h3>100+</h3>
+          <p>Movies</p>
+        </div>
+        <div>
+          <h3>50+</h3>
+          <p>Theatres</p>
+        </div>
+        <div>
+          <h3>10K+</h3>
+          <p>Happy Users</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-glow"></div>
+      <div class="hero-card">
+        <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+             alt="Interstellar movie poster">
+        <div class="hero-card-overlay">
+          <span>FEATURED MOVIE</span>
+          <h2>Interstellar</h2>
+          <p>Sci-Fi Â· Adventure</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Movies Section -->
+  <section class="movies-section" id="movies">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">NOW SHOWING</p>
+        <h2>Popular Movies</h2>
+        <p class="section-description">
+          Find your next favourite movie and book your tickets.
+        </p>
+      </div>
+
+      <a routerLink="/movies"  class="view-all">View all movies â†’</a>
+    </div>
+
+    <div class="movie-grid">
+      @for (movie of movies; track movie.title) {
+      <article class="movie-card">
+        <div class="movie-poster">
+          <img [src]="movie.poster"
+               [alt]="movie.title + ' poster'">
+
+          <span class="genre-tag">{{ movie.genre }}</span>
+        </div>
+
+        <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+
+          <p>
+            {{ movie.language }} <span>Â·</span> {{ movie.duration }}
+          </p>
+
+          <button class="book-btn">
+            Book Tickets <span>â†’</span>
+          </button>
+        </div>
+      </article>
+      }
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <p class="section-label">WHY CINEBOOK?</p>
+    <h2>Your Movie Night, Made Better.</h2>
+    <p>
+      Discover movies, explore showtimes and enjoy a simple
+      ticket-booking experienceâ€”all in one place.
+    </p>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="logo">CineBook<span>.</span></div>
+  <p>Â© 2026 CineBook. Your cinema experience starts here.</p>
+</footer>
+
+
+

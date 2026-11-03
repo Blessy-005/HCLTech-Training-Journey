@@ -1,0 +1,67 @@
+﻿<div class="auth-page">
+  <a routerLink="/" class="logo">CineBook<span>.</span></a>
+
+  <section class="auth-card">
+    <p class="eyebrow">JOIN CINEBOOK</p>
+    <h1>Create Your <span>Account.</span></h1>
+    <p class="subtitle">Sign up and start booking your favourite movies.</p>
+
+    <form (ngSubmit)="onRegister()">
+      <label>Full Name</label>
+      <input
+        type="text"
+        placeholder="Enter your name"
+        [(ngModel)]="fullName"
+        name="fullName"
+        required
+      >
+
+      <label>Email Address</label>
+      <input
+        type="email"
+        placeholder="Enter your email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        email
+      >
+
+      <label>Password</label>
+      <input
+        type="password"
+        placeholder="Create a password (minimum 8 characters)"
+        [(ngModel)]="password"
+        name="password"
+        required
+        minlength="8"
+      >
+
+      <label>Confirm Password</label>
+      <input
+        type="password"
+        placeholder="Re-enter your password"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+        required
+      >
+
+      <p class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <p class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </p>
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+    <a routerLink="/" class="home-link">Back to Home</a>
+  </section>
+</div>

@@ -1,0 +1,93 @@
+﻿<nav class="movies-navbar">
+  <a routerLink="/" class="logo">CineBook<span>.</span></a>
+
+  <div class="nav-links">
+    <a routerLink="/">Home</a>
+    <a routerLink="/movies" class="active">Movies</a>
+  </div>
+
+  <a routerLink="/" class="home-btn">Back to Home</a>
+</nav>
+
+<main class="movies-page">
+  <section class="movies-hero">
+    <p class="eyebrow">YOUR NEXT MOVIE EXPERIENCE</p>
+    <h1>Explore <span>Movies.</span></h1>
+    <p>Discover your favourite stories and find your next big-screen experience.</p>
+  </section>
+
+  <section class="movie-catalog">
+    <div class="catalog-heading">
+      <div>
+        <p class="eyebrow">THE COLLECTION</p>
+        <h2>All Movies</h2>
+      </div>
+      <div class="movie-count">{{ totalCount }} Movies</div>
+    </div>
+
+    <div class="movie-controls">
+      <input
+        type="text"
+        placeholder="Search movies..."
+        [(ngModel)]="searchText"
+        (input)="searchMovies()">
+
+      <div class="genre-filters">
+        @for (genre of genres; track genre) {
+          <button
+            [class.selected]="selectedGenre === genre"
+            (click)="selectGenre(genre)">
+            {{ genre }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="empty-state"><h3>Loading movies...</h3></div>
+    } @else if (errorMessage) {
+      <div class="empty-state"><h3>{{ errorMessage }}</h3></div>
+    } @else {
+      <div class="movie-grid">
+        @for (movie of movies; track movie.id) {
+          <article class="movie-card">
+            <div class="poster">
+              @if (movie.posterUrl) {
+                <img [src]="movie.posterUrl" [alt]="movie.title + ' poster'">
+              } @else {
+                <div class="poster-placeholder">
+                  <span>{{ movie.title }}</span>
+                </div>
+              }
+              <span class="genre-tag">{{ movie.genre }}</span>
+            </div>
+
+            <div class="movie-info">
+              <h3>{{ movie.title }}</h3>
+              <p>{{ movie.language }} · {{ getDuration(movie.durationMinutes) }}</p>
+
+              <div class="movie-actions">
+                <a class="book-btn" [routerLink]="['/movie-details', movie.id]">
+                  Book Tickets
+                </a>
+                <a class="details-btn" [routerLink]="['/movie-details', movie.id]">
+                  View Details
+                </a>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <div class="empty-state">
+            <h3>No movies found</h3>
+            <p>Try another movie name or genre.</p>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</main>
+
+<footer class="movies-footer">
+  <a routerLink="/" class="logo">CineBook<span>.</span></a>
+  <p>© 2026 CineBook. Your cinema experience starts here.</p>
+</footer>

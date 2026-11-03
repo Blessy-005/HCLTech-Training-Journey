@@ -1,0 +1,44 @@
+﻿<div class="auth-page">
+  <a routerLink="/" class="logo">CineBook<span>.</span></a>
+
+  <section class="auth-card">
+    <p class="eyebrow">WELCOME BACK</p>
+    <h1>Login to <span>CineBook.</span></h1>
+    <p class="subtitle">Continue your movie booking experience.</p>
+
+    <form (ngSubmit)="onLogin()">
+      <label>Email Address</label>
+      <input
+        type="email"
+        placeholder="Enter your email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        email
+      >
+
+      <label>Password</label>
+      <input
+        type="password"
+        placeholder="Enter your password"
+        [(ngModel)]="password"
+        name="password"
+        required
+      >
+
+      <p class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Don't have an account?
+      <a routerLink="/register">Register</a>
+    </p>
+    <a routerLink="/" class="home-link">Back to Home</a>
+  </section>
+</div>
