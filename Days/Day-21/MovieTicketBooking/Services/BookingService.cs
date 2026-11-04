@@ -1,4 +1,4 @@
-
+﻿
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +43,11 @@ namespace MovieTicketBooking.Services
                 isAdmin ? null : userId);
 
             return bookings.Select(MapToResponseDto).ToList();
+        }
+
+        public async Task<Booking?> GetResourceByIdAsync(int id)
+        {
+            return await _bookingRepository.GetByIdAsync(id);
         }
 
         public async Task<BookingResponseDto?> GetByIdAsync(
@@ -216,4 +221,5 @@ namespace MovieTicketBooking.Services
         }
     }
 }
+
 

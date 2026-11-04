@@ -1,4 +1,5 @@
-using MovieTicketBooking.DTOs.Bookings;
+﻿using MovieTicketBooking.DTOs.Bookings;
+using MovieTicketBooking.Models;
 
 namespace MovieTicketBooking.Services.Interfaces
 {
@@ -13,6 +14,8 @@ namespace MovieTicketBooking.Services.Interfaces
             int id,
             string userId,
             bool isAdmin);
+
+        Task<Booking?> GetResourceByIdAsync(int id);
 
         Task<BookingResponseDto> CreateAsync(
             CreateBookingDto dto,

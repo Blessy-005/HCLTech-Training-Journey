@@ -1,56 +1,75 @@
 ﻿<nav class="details-navbar">
   <a routerLink="/" class="logo">CineBook<span>.</span></a>
-  <a routerLink="/movies"  class="back-link">← Back to Movies</a>
+  <a routerLink="/movies" class="back-link">← Back to Movies</a>
 </nav>
 
 <main class="details-page">
-  <section class="movie-details">
-    <div class="details-poster">
-      <img [src]="movie.poster" [alt]="movie.title + ' poster'">
+
+  @if (isLoading) {
+    <div class="empty-state">
+      <h2>Loading movie details...</h2>
     </div>
+  } @else if (errorMessage) {
+    <div class="empty-state">
+      <h2>{{ errorMessage }}</h2>
+      <a routerLink="/movies">Back to Movies</a>
+    </div>
+  } @else if (movie) {
+    <section class="movie-details">
 
-    <div class="details-content">
-      <p class="eyebrow">MOVIE DETAILS</p>
-      <h1>{{ movie.title }}</h1>
-
-      <div class="movie-meta">
-        <span>{{ movie.genre }}</span>
-        <span>{{ movie.language }}</span>
-        <span>{{ movie.duration }}</span>
-      </div>
-
-      <div class="rating">
-        ★ {{ movie.rating }}
-      </div>
-
-      <p class="release-date">Release Year: {{ movie.releaseDate }}</p>
-
-      <p class="description">{{ movie.description }}</p>
-
-      <h2>Available Shows</h2>
-
-      <div class="show-list">
-        @for (show of shows; track show.time) {
-          <article class="show-card">
-            <div>
-              <h3>{{ show.theatre }}</h3>
-              <p>{{ show.time }}</p>
-            </div>
-
-            <div class="show-action">
-              <span>₹{{ show.price }}</span>
-              <button [routerLink]="['/seats']">Select Seats</button>
-            </div>
-          </article>
+      <div class="details-poster">
+        @if (movie.posterUrl) {
+          <img [src]="movie.posterUrl" [alt]="movie.title + ' poster'">
+        } @else {
+          <div class="poster-placeholder">
+            {{ movie.title }}
+          </div>
         }
       </div>
-    </div>
-  </section>
+
+      <div class="details-content">
+        <p class="eyebrow">MOVIE DETAILS</p>
+
+        <h1>{{ movie.title }}</h1>
+
+        <div class="movie-meta">
+          <span>{{ movie.genre }}</span>
+          <span>{{ movie.language }}</span>
+          <span>{{ getDuration(movie.durationMinutes) }}</span>
+        </div>
+
+        <p class="release-date">
+          Release Year: {{ getReleaseYear(movie.releaseDate) }}
+        </p>
+
+        <p class="description">{{ movie.description }}</p>
+
+        <h2>Available Shows</h2>
+
+        <div class="show-list">
+          @for (show of shows; track show.time) {
+            <article class="show-card">
+              <div>
+                <h3>{{ show.theatre }}</h3>
+                <p>{{ show.time }}</p>
+              </div>
+
+              <div class="show-action">
+                <span>₹{{ show.price }}</span>
+                <button [routerLink]="['/seats']">
+                  Select Seats
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+
+    </section>
+  }
 </main>
 
 <footer class="details-footer">
   <span class="logo">CineBook<span>.</span></span>
   <p>© 2026 CineBook. Your cinema experience starts here.</p>
 </footer>
-
-

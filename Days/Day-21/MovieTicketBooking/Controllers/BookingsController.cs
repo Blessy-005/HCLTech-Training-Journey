@@ -1,7 +1,7 @@
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieTicketBooking.Authorization;
 using MovieTicketBooking.DTOs.Bookings;
 using MovieTicketBooking.Services.Interfaces;
 
@@ -13,17 +13,23 @@ namespace MovieTicketBooking.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public BookingsController(IBookingService bookingService)
+        public BookingsController(
+            IBookingService bookingService,
+            IAuthorizationService authorizationService)
         {
             _bookingService = bookingService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(
             [FromQuery] BookingQueryDto query)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
+
             var isAdmin = User.IsInRole("Admin");
 
             if (string.IsNullOrEmpty(userId))
@@ -38,25 +44,42 @@ namespace MovieTicketBooking.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
+
             var isAdmin = User.IsInRole("Admin");
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var booking = await _bookingService.GetByIdAsync(
-                id, userId, isAdmin);
+            var booking = await _bookingService.GetResourceByIdAsync(id);
 
             if (booking == null)
                 return NotFound("Booking not found.");
 
-            return Ok(booking);
+            var authorizationResult =
+                await _authorizationService.AuthorizeAsync(
+                    User,
+                    booking,
+                    new BookingOwnerRequirement());
+
+            if (!authorizationResult.Succeeded)
+                return Forbid();
+
+            var response = await _bookingService.GetByIdAsync(
+                id, userId, isAdmin);
+
+            if (response == null)
+                return NotFound("Booking not found.");
+
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateBookingDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
@@ -72,11 +95,27 @@ namespace MovieTicketBooking.Controllers
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> Cancel(int id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
+
             var isAdmin = User.IsInRole("Admin");
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
+
+            var booking = await _bookingService.GetResourceByIdAsync(id);
+
+            if (booking == null)
+                return NotFound("Booking not found.");
+
+            var authorizationResult =
+                await _authorizationService.AuthorizeAsync(
+                    User,
+                    booking,
+                    new BookingOwnerRequirement());
+
+            if (!authorizationResult.Succeeded)
+                return Forbid();
 
             var result = await _bookingService.CancelAsync(
                 id, userId, isAdmin);
@@ -88,4 +127,3 @@ namespace MovieTicketBooking.Controllers
         }
     }
 }
-

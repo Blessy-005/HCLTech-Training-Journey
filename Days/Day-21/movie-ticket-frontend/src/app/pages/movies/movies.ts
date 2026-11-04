@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { Movie, MovieService } from '../../services/movie';
 
 @Component({
@@ -21,7 +22,6 @@ export class Movies implements OnInit {
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
-    console.log('MOVIES COMPONENT LOADED');
     this.loadMovies();
   }
 
@@ -30,20 +30,26 @@ export class Movies implements OnInit {
     this.errorMessage = '';
 
     this.movieService.getMovies(this.searchText, this.selectedGenre)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe({
         next: response => {
-          this.movies = response.items;
-          this.totalCount = response.totalCount;
+          this.movies = response.items ?? [];
+          this.totalCount = response.totalCount ?? 0;
 
           this.genres = [
             'All',
-            ...new Set(response.items.map(movie => movie.genre).filter(Boolean))
+            ...new Set(
+              this.movies
+                .map(movie => movie.genre)
+                .filter(Boolean)
+            )
           ];
-
-          this.isLoading = false;
         },
         error: error => {
-          this.isLoading = false;
           this.errorMessage = 'Unable to load movies. Please check the backend.';
           console.error('Movies API error:', error);
         }
@@ -65,5 +71,3 @@ export class Movies implements OnInit {
     return `${hours}h ${remainingMinutes}m`;
   }
 }
-
-
