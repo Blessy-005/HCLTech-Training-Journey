@@ -10,5 +10,6 @@ public interface IApplicationStatusHistoryService
         string updatedByUserId);
 
     Task<List<ApplicationStatusHistoryDto>> GetHistoryAsync(
-        int applicationId);
+        int applicationId,
+        string requestedByUserId);
 }

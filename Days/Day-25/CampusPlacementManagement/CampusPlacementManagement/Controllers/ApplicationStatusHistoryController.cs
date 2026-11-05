@@ -24,19 +24,14 @@ public class ApplicationStatusHistoryController : ControllerBase
         int applicationId,
         [FromBody] UpdateApplicationStatusDto dto)
     {
-        var updatedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (string.IsNullOrEmpty(updatedByUserId))
-        {
+        if (string.IsNullOrEmpty(userId))
             return Unauthorized();
-        }
 
         try
         {
-            await _service.UpdateStatusAsync(
-                applicationId,
-                dto,
-                updatedByUserId);
+            await _service.UpdateStatusAsync(applicationId, dto, userId);
 
             return Ok(new
             {
@@ -47,6 +42,10 @@ public class ApplicationStatusHistoryController : ControllerBase
         {
             return NotFound(new { message = ex.Message });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(403, new { message = ex.Message });
+        }
         catch (ArgumentException ex)
         {
             return BadRequest(new { message = ex.Message });
@@ -56,8 +55,25 @@ public class ApplicationStatusHistoryController : ControllerBase
     [HttpGet("{applicationId:int}/status-history")]
     public async Task<IActionResult> GetHistory(int applicationId)
     {
-        var history = await _service.GetHistoryAsync(applicationId);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        return Ok(history);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        try
+        {
+            var history = await _service.GetHistoryAsync(
+                applicationId, userId);
+
+            return Ok(history);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(403, new { message = ex.Message });
+        }
     }
 }
