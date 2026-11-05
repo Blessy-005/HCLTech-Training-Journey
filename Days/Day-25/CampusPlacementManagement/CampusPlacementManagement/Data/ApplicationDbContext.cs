@@ -25,6 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     // Job application management
     public DbSet<JobApplication> JobApplications { get; set; }
+    public DbSet<ApplicationStatusHistory> ApplicationStatusHistories { get; set; }
 
     // Recruitment drive management
     public DbSet<RecruitmentDrive> RecruitmentDrives { get; set; }
@@ -40,3 +41,4 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             typeof(ApplicationDbContext).Assembly);
     }
 }
+
