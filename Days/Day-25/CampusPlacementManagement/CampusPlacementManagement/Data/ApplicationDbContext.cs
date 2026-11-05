@@ -22,6 +22,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<CompanyHR> CompanyHRs { get; set; }
 
     public DbSet<Student> Students { get; set; }
+    public DbSet<JobOpening> JobOpenings { get; set; }
+
+    public DbSet<JobTargetCollege> JobTargetColleges { get; set; }
 
     // Load Fluent API configurations
     protected override void OnModelCreating(ModelBuilder builder)
