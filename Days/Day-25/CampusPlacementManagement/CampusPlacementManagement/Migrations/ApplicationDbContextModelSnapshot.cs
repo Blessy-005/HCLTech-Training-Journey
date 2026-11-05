@@ -283,7 +283,7 @@ namespace CampusPlacementManagement.Migrations
                     b.HasIndex("StudentId", "JobId")
                         .IsUnique();
 
-                    b.ToTable("JobApplication");
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobOpening", b =>
@@ -420,6 +420,46 @@ namespace CampusPlacementManagement.Migrations
                         .IsUnique();
 
                     b.ToTable("PlacementOfficers");
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.RecruitmentDrive", b =>
+                {
+                    b.Property<int>("DriveId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DriveId"));
+
+                    b.Property<int>("CollegeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DriveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Venue")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("DriveId");
+
+                    b.HasIndex("CollegeId");
+
+                    b.HasIndex("DriveDate");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("RecruitmentDrives");
                 });
 
             modelBuilder.Entity("CampusPlacementManagement.Models.Entities.Student", b =>
@@ -730,6 +770,25 @@ namespace CampusPlacementManagement.Migrations
                     b.Navigation("College");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.RecruitmentDrive", b =>
+                {
+                    b.HasOne("CampusPlacementManagement.Models.Entities.College", "College")
+                        .WithMany()
+                        .HasForeignKey("CollegeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CampusPlacementManagement.Models.Entities.JobOpening", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("College");
+
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("CampusPlacementManagement.Models.Entities.Student", b =>

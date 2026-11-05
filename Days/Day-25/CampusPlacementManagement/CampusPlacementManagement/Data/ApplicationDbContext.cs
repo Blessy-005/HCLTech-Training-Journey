@@ -25,7 +25,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<JobOpening> JobOpenings { get; set; }
 
     public DbSet<JobTargetCollege> JobTargetColleges { get; set; }
-
+    public DbSet<JobApplication> JobApplications { get; set; }
+    // Recruitment drive management
+    public DbSet<RecruitmentDrive> RecruitmentDrives { get; set; }
     // Load Fluent API configurations
     protected override void OnModelCreating(ModelBuilder builder)
     {
