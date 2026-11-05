@@ -29,6 +29,9 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .IsRequired()
             .HasMaxLength(500);
 
+        builder.Property(c => c.Description)
+            .IsRequired(false);
+
         builder.Property(c => c.Status)
             .HasConversion<string>()
             .HasMaxLength(50)

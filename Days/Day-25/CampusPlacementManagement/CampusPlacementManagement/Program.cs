@@ -65,6 +65,7 @@ builder.Services.AddAuthorization();
 // Register repositories
 builder.Services.AddScoped<ICollegeRepository, CollegeRepository>();
 builder.Services.AddScoped<IPlacementOfficerRepository, PlacementOfficerRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
 // Register application services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -72,6 +73,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationStatusHistoryService, ApplicationStatusHistoryService>();
 builder.Services.AddScoped<ICollegeService, CollegeService>();
 builder.Services.AddScoped<IPlacementOfficerService, PlacementOfficerService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

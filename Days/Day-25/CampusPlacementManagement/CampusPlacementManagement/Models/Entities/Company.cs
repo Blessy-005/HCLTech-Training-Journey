@@ -26,6 +26,8 @@ public class Company
     [MaxLength(500)]
     public string Address { get; set; } = string.Empty;
 
+    public string? Description { get; set; }
+
     public CompanyStatus Status { get; set; }
         = CompanyStatus.Pending;
 
