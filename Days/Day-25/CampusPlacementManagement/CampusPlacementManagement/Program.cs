@@ -69,6 +69,7 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyHRRepository, CompanyHRRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
+builder.Services.AddScoped<IRecruitmentDriveRepository, RecruitmentDriveRepository>();
 // Register application services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -79,8 +80,11 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyHRService, CompanyHRService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
+builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
+builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
 builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
+builder.Services.AddScoped<IRecruitmentDriveRepository, RecruitmentDriveRepository>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -116,6 +120,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 
 
 
