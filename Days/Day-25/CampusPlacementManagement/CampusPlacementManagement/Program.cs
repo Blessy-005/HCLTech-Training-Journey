@@ -68,7 +68,7 @@ builder.Services.AddScoped<IPlacementOfficerRepository, PlacementOfficerReposito
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyHRRepository, CompanyHRRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-
+builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
 // Register application services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -78,7 +78,7 @@ builder.Services.AddScoped<IPlacementOfficerService, PlacementOfficerService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyHRService, CompanyHRService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
-
+builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 

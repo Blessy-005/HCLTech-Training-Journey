@@ -22,6 +22,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     // Job management
     public DbSet<JobOpening> JobOpenings { get; set; }
     public DbSet<JobTargetCollege> JobTargetColleges { get; set; }
+    public DbSet<JobEligibleDepartment> JobEligibleDepartments { get; set; }
+    public DbSet<JobEligibleGraduationYear> JobEligibleGraduationYears { get; set; }
 
     // Job application management
     public DbSet<JobApplication> JobApplications { get; set; }
@@ -41,4 +43,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             typeof(ApplicationDbContext).Assembly);
     }
 }
+
 

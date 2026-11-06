@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using CampusPlacementManagement.Models.Enums;
 
 namespace CampusPlacementManagement.Models.Entities;
@@ -6,9 +6,7 @@ namespace CampusPlacementManagement.Models.Entities;
 public class JobOpening
 {
     public int JobId { get; set; }
-
     public int CompanyId { get; set; }
-
     public int CreatedByHRId { get; set; }
 
     [Required]
@@ -27,21 +25,23 @@ public class JobOpening
     public string Location { get; set; } = string.Empty;
 
     public decimal? SalaryPackage { get; set; }
-
     public decimal? MinimumCGPA { get; set; }
-
     public int? MaximumBacklogs { get; set; }
-
     public DateTime ApplicationDeadline { get; set; }
-
     public bool IsOpenToAllColleges { get; set; }
-
     public JobStatus Status { get; set; } = JobStatus.Draft;
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
     public Company Company { get; set; } = null!;
-
     public CompanyHR CreatedByHR { get; set; } = null!;
+
+    public ICollection<JobEligibleDepartment> EligibleDepartments { get; set; }
+        = new List<JobEligibleDepartment>();
+
+    public ICollection<JobEligibleGraduationYear> EligibleGraduationYears { get; set; }
+        = new List<JobEligibleGraduationYear>();
+
+    public ICollection<JobTargetCollege> JobTargetColleges { get; set; }
+        = new List<JobTargetCollege>();
 }

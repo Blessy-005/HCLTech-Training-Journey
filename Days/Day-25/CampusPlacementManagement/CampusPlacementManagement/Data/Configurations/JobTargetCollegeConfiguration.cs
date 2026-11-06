@@ -1,4 +1,4 @@
-﻿using CampusPlacementManagement.Models.Entities;
+using CampusPlacementManagement.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +14,7 @@ public class JobTargetCollegeConfiguration
 
         // Job relationship
         builder.HasOne(jtc => jtc.Job)
-            .WithMany()
+            .WithMany(j => j.JobTargetColleges)
             .HasForeignKey(jtc => jtc.JobId)
             .OnDelete(DeleteBehavior.Restrict);
 

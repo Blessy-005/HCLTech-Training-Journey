@@ -407,6 +407,52 @@ namespace CampusPlacementManagement.Migrations
                     b.ToTable("JobApplications");
                 });
 
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobEligibleDepartment", b =>
+                {
+                    b.Property<int>("JobEligibleDepartmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobEligibleDepartmentId"));
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobEligibleDepartmentId");
+
+                    b.HasIndex("JobId", "Department")
+                        .IsUnique();
+
+                    b.ToTable("JobEligibleDepartments");
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobEligibleGraduationYear", b =>
+                {
+                    b.Property<int>("JobEligibleGraduationYearId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobEligibleGraduationYearId"));
+
+                    b.Property<int>("GraduationYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobEligibleGraduationYearId");
+
+                    b.HasIndex("JobId", "GraduationYear")
+                        .IsUnique();
+
+                    b.ToTable("JobEligibleGraduationYears");
+                });
+
             modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobOpening", b =>
                 {
                     b.Property<int>("JobId")
@@ -878,6 +924,28 @@ namespace CampusPlacementManagement.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobEligibleDepartment", b =>
+                {
+                    b.HasOne("CampusPlacementManagement.Models.Entities.JobOpening", "Job")
+                        .WithMany("EligibleDepartments")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobEligibleGraduationYear", b =>
+                {
+                    b.HasOne("CampusPlacementManagement.Models.Entities.JobOpening", "Job")
+                        .WithMany("EligibleGraduationYears")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+                });
+
             modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobOpening", b =>
                 {
                     b.HasOne("CampusPlacementManagement.Models.Entities.Company", "Company")
@@ -906,7 +974,7 @@ namespace CampusPlacementManagement.Migrations
                         .IsRequired();
 
                     b.HasOne("CampusPlacementManagement.Models.Entities.JobOpening", "Job")
-                        .WithMany()
+                        .WithMany("JobTargetColleges")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1037,6 +1105,15 @@ namespace CampusPlacementManagement.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.Entities.JobOpening", b =>
+                {
+                    b.Navigation("EligibleDepartments");
+
+                    b.Navigation("EligibleGraduationYears");
+
+                    b.Navigation("JobTargetColleges");
                 });
 #pragma warning restore 612, 618
         }
