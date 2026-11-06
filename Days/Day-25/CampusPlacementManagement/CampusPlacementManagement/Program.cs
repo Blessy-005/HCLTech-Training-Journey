@@ -78,6 +78,8 @@ builder.Services.AddScoped<IPlacementOfficerService, PlacementOfficerService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyHRService, CompanyHRService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
+builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -114,4 +116,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
 
