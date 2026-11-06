@@ -51,20 +51,24 @@ public class ApplicationStatusHistoryService
             throw new KeyNotFoundException(
                 $"Application with ID {applicationId} was not found.");
 
+        var previousStatus = application.Status;
         var authorized = false;
+        var isSuperAdmin = roles.Contains("SuperAdmin");
 
-        if (roles.Contains("SuperAdmin"))
+        if (isSuperAdmin)
         {
             authorized = true;
         }
-        else if (roles.Contains("CompanyHR") &&
-                 dto.NewStatus is JobApplicationStatus.Shortlisted
-                     or JobApplicationStatus.Rejected)
+        else if (roles.Contains("CompanyHR"))
         {
-            authorized = await _context.CompanyHRs.AnyAsync(hr =>
-                hr.UserId == updatedByUserId &&
-                hr.CompanyId == application.Job.CompanyId &&
-                hr.Status == CompanyHRStatus.Approved);
+            authorized = dto.NewStatus != JobApplicationStatus.Withdrawn
+                && dto.NewStatus != JobApplicationStatus.Applied
+                && await _context.CompanyHRs.AnyAsync(hr =>
+                    hr.UserId == updatedByUserId &&
+                    hr.CompanyId == application.Job.CompanyId &&
+                    hr.Status == CompanyHRStatus.Approved &&
+                    hr.User.AccountStatus == AccountStatus.Approved &&
+                    hr.Company.Status == CompanyStatus.Approved);
         }
         else if (roles.Contains("Student") &&
                  dto.NewStatus == JobApplicationStatus.Withdrawn)
@@ -72,19 +76,24 @@ public class ApplicationStatusHistoryService
             authorized = await _context.Students.AnyAsync(student =>
                 student.UserId == updatedByUserId &&
                 student.StudentId == application.StudentId &&
-                student.Status == StudentStatus.Approved);
+                student.Status == StudentStatus.Approved &&
+                student.User.AccountStatus == AccountStatus.Approved &&
+                student.College.Status == CollegeStatus.Approved);
         }
 
         if (!authorized)
             throw new UnauthorizedAccessException(
                 "You are not authorized to update this application.");
 
-        if (application.Status == dto.NewStatus)
+        if (previousStatus == dto.NewStatus)
             throw new ArgumentException(
                 "The application already has this status.");
 
+        if (!IsAllowedTransition(previousStatus, dto.NewStatus, isSuperAdmin))
+            throw new ArgumentException(
+                $"Changing status from {previousStatus} to {dto.NewStatus} is not allowed.");
+
         var now = DateTime.UtcNow;
-        var previousStatus = application.Status;
 
         application.Status = dto.NewStatus;
         application.LastUpdatedAt = now;
@@ -103,6 +112,51 @@ public class ApplicationStatusHistoryService
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    private static bool IsAllowedTransition(
+        JobApplicationStatus current,
+        JobApplicationStatus next,
+        bool isSuperAdmin)
+    {
+        if (current is JobApplicationStatus.Rejected
+            or JobApplicationStatus.Selected
+            or JobApplicationStatus.NotSelected
+            or JobApplicationStatus.Withdrawn)
+            return false;
+
+        if (next == JobApplicationStatus.Withdrawn)
+            return isSuperAdmin || current is
+                JobApplicationStatus.Applied
+                or JobApplicationStatus.UnderReview
+                or JobApplicationStatus.Shortlisted
+                or JobApplicationStatus.InterviewScheduled;
+
+        return current switch
+        {
+            JobApplicationStatus.Applied =>
+                next is JobApplicationStatus.UnderReview
+                    or JobApplicationStatus.Shortlisted
+                    or JobApplicationStatus.Rejected,
+
+            JobApplicationStatus.UnderReview =>
+                next is JobApplicationStatus.Shortlisted
+                    or JobApplicationStatus.Rejected
+                    or JobApplicationStatus.InterviewScheduled,
+
+            JobApplicationStatus.Shortlisted =>
+                next is JobApplicationStatus.InterviewScheduled
+                    or JobApplicationStatus.Rejected
+                    or JobApplicationStatus.Selected
+                    or JobApplicationStatus.NotSelected,
+
+            JobApplicationStatus.InterviewScheduled =>
+                next is JobApplicationStatus.Rejected
+                    or JobApplicationStatus.Selected
+                    or JobApplicationStatus.NotSelected,
+
+            _ => false
+        };
     }
 
     public async Task<List<ApplicationStatusHistoryDto>> GetHistoryAsync(
@@ -141,7 +195,9 @@ public class ApplicationStatusHistoryService
             authorized = await _context.Students.AnyAsync(student =>
                 student.UserId == requestedByUserId &&
                 student.StudentId == application.StudentId &&
-                student.Status == StudentStatus.Approved);
+                student.Status == StudentStatus.Approved &&
+                student.User.AccountStatus == AccountStatus.Approved &&
+                student.College.Status == CollegeStatus.Approved);
         }
 
         if (!authorized && roles.Contains("CompanyHR"))
@@ -149,20 +205,19 @@ public class ApplicationStatusHistoryService
             authorized = await _context.CompanyHRs.AnyAsync(hr =>
                 hr.UserId == requestedByUserId &&
                 hr.CompanyId == application.Job.CompanyId &&
-                hr.Status == CompanyHRStatus.Approved);
+                hr.Status == CompanyHRStatus.Approved &&
+                hr.User.AccountStatus == AccountStatus.Approved &&
+                hr.Company.Status == CompanyStatus.Approved);
         }
 
         if (!authorized && roles.Contains("PlacementOfficer"))
         {
-            authorized = await (
-                from officer in _context.PlacementOfficers
-                join student in _context.Students
-                    on officer.CollegeId equals student.CollegeId
-                where officer.UserId == requestedByUserId
-                      && officer.Status == PlacementOfficerStatus.Approved
-                      && student.StudentId == application.StudentId
-                select officer.PlacementOfficerId
-            ).AnyAsync();
+            authorized = await _context.PlacementOfficers.AnyAsync(officer =>
+                officer.UserId == requestedByUserId &&
+                officer.Status == PlacementOfficerStatus.Approved &&
+                officer.User.AccountStatus == AccountStatus.Approved &&
+                officer.College.Status == CollegeStatus.Approved &&
+                officer.CollegeId == application.Student.CollegeId);
         }
 
         if (!authorized)
