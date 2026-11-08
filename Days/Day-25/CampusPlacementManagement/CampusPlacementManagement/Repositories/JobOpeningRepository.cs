@@ -63,4 +63,9 @@ public class JobOpeningRepository : IJobOpeningRepository
                 c.CollegeId == collegeId &&
                 c.Status == CollegeStatus.Approved);
     }
+    public async Task RemoveTargetCollegeAsync(JobTargetCollege targetCollege)
+    {
+        _context.Remove(targetCollege);
+        await _context.SaveChangesAsync();
+    }
 }

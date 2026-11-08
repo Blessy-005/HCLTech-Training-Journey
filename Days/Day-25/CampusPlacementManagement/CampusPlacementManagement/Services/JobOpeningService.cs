@@ -259,9 +259,7 @@ public class JobOpeningService : IJobOpeningService
         if (target == null)
             return false;
 
-        job.JobTargetColleges.Remove(target);
-
-        await _jobRepository.UpdateAsync(job);
+        await _jobRepository.RemoveTargetCollegeAsync(target);
         return true;
     }
 

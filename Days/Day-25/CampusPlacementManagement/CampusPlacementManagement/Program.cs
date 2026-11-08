@@ -79,6 +79,7 @@ builder.Services.AddScoped<IPlacementOfficerService, PlacementOfficerService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyHRService, CompanyHRService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IJobOpeningService, JobOpeningService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
@@ -123,6 +124,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
 
 
 

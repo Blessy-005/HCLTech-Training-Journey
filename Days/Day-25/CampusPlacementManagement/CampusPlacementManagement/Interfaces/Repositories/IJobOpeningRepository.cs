@@ -10,4 +10,5 @@ public interface IJobOpeningRepository
     Task UpdateAsync(JobOpening jobOpening);
     Task<bool> CollegeExistsAsync(int collegeId);
     Task<bool> IsCollegeApprovedAsync(int collegeId);
+    Task RemoveTargetCollegeAsync(JobTargetCollege targetCollege);
 }
