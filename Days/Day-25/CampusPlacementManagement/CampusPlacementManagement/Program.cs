@@ -84,8 +84,6 @@ builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
-builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
-builder.Services.AddScoped<IRecruitmentDriveRepository, RecruitmentDriveRepository>();
 builder.Services.AddScoped<
     CampusPlacementManagement.Interfaces.Services.IInterviewService,
     CampusPlacementManagement.Services.InterviewService>();
