@@ -6,6 +6,7 @@ using CampusPlacementManagement.Interfaces.Services;
 using CampusPlacementManagement.Interfaces.Repositories;
 using CampusPlacementManagement.Repositories;
 using CampusPlacementManagement.Models.Entities;
+using CampusPlacementManagement.Middleware;
 using CampusPlacementManagement.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -115,6 +116,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -123,6 +125,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 
 
 
