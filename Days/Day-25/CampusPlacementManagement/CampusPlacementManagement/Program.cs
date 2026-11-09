@@ -87,6 +87,7 @@ builder.Services.AddScoped<IRecruitmentDriveService, RecruitmentDriveService>();
 builder.Services.AddScoped<
     CampusPlacementManagement.Interfaces.Services.IInterviewService,
     CampusPlacementManagement.Services.InterviewService>();
+builder.Services.AddScoped<CampusPlacementManagement.Interfaces.Services.IReportsService, CampusPlacementManagement.Services.ReportsService>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -122,6 +123,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 
 
 
